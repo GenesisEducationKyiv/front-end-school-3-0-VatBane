@@ -1,0 +1,41 @@
+.body-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 24px;
+    margin: 0 auto;
+    max-width: 1200px;
+    min-height: 100vh;
+}
+
+.catalog-container {
+    margin: 20px;
+}
+
+/*.catalog-container:first-child {*/
+/*    border-top: none;*/
+/*}*/
+.page-scroll {
+    margin: 0 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-number {
+    padding: 0 8px;
+}
+
+.page-number:hover {
+    background-color: #333;
+    border-radius: 20%;
+}
+
+span {
+    text-align: center;
+    /*line-height: 100%;*/
+}
