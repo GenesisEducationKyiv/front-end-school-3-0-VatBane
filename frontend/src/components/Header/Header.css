@@ -1,0 +1,26 @@
+header {
+    position: sticky;
+    width: 100%;
+    gap: 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 32px;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.app-title {
+    margin: 0;
+    padding: 0;
+}
+
+.app-icon {
+    height: 30px;
+    width: 30px;
+}
+
+.action-title {
+    margin: 0;
+    padding: 0 10px;
+}
