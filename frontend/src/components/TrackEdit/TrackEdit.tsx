@@ -1,7 +1,7 @@
 import './TrackEdit.css'
 import {ChangeEvent, useState} from "react";
 import TagInput from "../TagInput/TagInput.tsx";
-import {Track, TrackMeta} from "../../types/Track.ts";
+import {TrackMeta} from "../../types/Track.ts";
 import useGenres from "../../hooks/useGenres.ts";
 import musicIcon from "../../assets/musicIcon.png"
 import saveIcon from "../../assets/saveIcon.png"
@@ -9,6 +9,7 @@ import {updateTrack} from "../../api/apiTracks.ts";
 import uploadIcon from "../../assets/uploadIcon.png";
 import removeIcon from "../../assets/removeIcon.png"
 import {removeFile} from "../../api/apiFiles.ts"
+import {Track} from "../../schemas/track.ts";
 
 
 interface Props {
@@ -22,8 +23,7 @@ const TrackEdit = ({track, handleClose, onApply}: Props) => {
     const [artist, setArtist] = useState<string>(track.artist);
     const [album, setAlbum] = useState<string>(track.album);
     const [genres, setGenres] = useState<string[]>(track.genres);
-    const [audioFile, setAudioFile] = useState<string>(track.audioFile);
-    const [fileBlob, setFileBlob] = useState<string>(track.audioFile);
+    const [audioFile, setAudioFile] = useState<string>(track.audioFile ?? "");
     const [coverImage, setCoverImage] = useState<string>(track.coverImage ?? "");
     const allowedTypes = ["audio/mp3", "audio/wav", "audio/mpeg", "audio/x-wav"];
 
