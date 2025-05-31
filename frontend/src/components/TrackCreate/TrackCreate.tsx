@@ -1,12 +1,12 @@
 import './TrackCreate.css'
 import {ChangeEvent, useState} from "react";
 import TagInput from "../TagInput/TagInput.tsx";
-import {Track} from "../../types/Track.ts";
 import useGenres from "../../hooks/useGenres.ts";
 import musicIcon from "../../assets/musicIcon.png"
 import saveIcon from "../../assets/saveIcon.png"
 import {saveTrack} from "../../api/apiTracks.ts";
 import {isValidImageUrl} from "../../utils/validationUtils.ts";
+import {Track} from "../../schemas/track.ts";
 
 
 interface Props {
@@ -42,11 +42,14 @@ const TrackCreate = ({handleClose, onSave}: Props) => {
             return;
         }
         const data = await saveTrack({title, artist, album, genres, coverImage});
-        if (data == null) {
+
+        if (data.isOk()) {
+            handleClose();
+            onSave(data.value);
+        }
+        else {
             return;
         }
-        handleClose();
-        onSave(data);
     }
 
     return (

@@ -7,13 +7,13 @@ const useGenres = () => {
     useEffect(() => {
         const fetchData = async () => {
             const data = await fetchGenres()
-            if (!data) {
-                return [];
+            if (data.isOk()) {
+                setGenres(data.value)
+            } else {
+                setGenres([]);
             }
-            setGenres(data);
         }
         fetchData();
-
     }, []);
 
     return genres

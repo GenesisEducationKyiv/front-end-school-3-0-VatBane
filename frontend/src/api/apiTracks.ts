@@ -1,8 +1,12 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-import {Filters} from "../types/Filters.ts";
-import {TrackMeta} from "../types/Track.ts";
+import {TrackResponseSchema, TrackResponse, Track, TrackSchema} from "../schemas/track.ts";
 
-export const fetchTracks = async (page: number, filters: Filters) => {
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { Filters } from "../types/Filters.ts";
+import { TrackMeta } from "../types/Track.ts";
+import { Result, ok, err} from "neverthrow"
+
+
+export const fetchTracks = async (page: number, filters: Filters): Promise<Result<TrackResponse, Error>> => {
 
     // define params;
     const {searchValue, artist, genre, sortBy, sortOrder, limit} = filters;
@@ -20,11 +24,15 @@ export const fetchTracks = async (page: number, filters: Filters) => {
     // process request
     const response = await fetch(`${API_BASE_URL}/tracks?` + params.toString())
     if (!response.ok) {
-        console.log(await response.json());
-        alert("Failed to load tracks!");
-        return
+        return err(new Error(`Failed to load tracks`));
     }
-    return await response.json();
+    try {
+        const data = TrackResponseSchema.parse(await response.json());
+        return ok(data);
+    } catch (error) {
+        console.log(error);
+        return err(new Error(`Failed to load tracks`));
+    }
 }
 
 export const bulkDeleteTracks = async (ids: string[]) => {
@@ -41,22 +49,20 @@ export const bulkDeleteTracks = async (ids: string[]) => {
     return;
 }
 
-export const saveTrack = async (track: TrackMeta) => {
+export const saveTrack = async (track: TrackMeta): Promise<Result<Track, Error>> => {
     const response = await fetch(`${API_BASE_URL}/tracks`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({...track})
     })
-    if (response.status < 200 || response.status > 299) {
-        console.log(await response.json());
+    if (response.status !== 201) {
         alert("Error occurred while saving track!");
-        return null;
+        return err(new Error(`Failed to save track!`));
     }
-
-    return await response.json()
+    return ok(TrackSchema.parse(await response.json()));
 }
 
-export const updateTrack = async (trackId: string, track: TrackMeta) => {
+export const updateTrack = async (trackId: string, track: TrackMeta): Promise<Result<Track, Error>> => {
     const response = await fetch(`${API_BASE_URL}/tracks/${trackId}`, {
         method: 'PUT',
         headers: {
@@ -64,11 +70,11 @@ export const updateTrack = async (trackId: string, track: TrackMeta) => {
         },
         body: JSON.stringify({...track}),
     })
-    if (response.status < 200 || response.status > 299) {
+    if (response.status !== 200) {
         alert("Error occurred while saving track!");
-        return null;
+        return err(new Error(`Failed to update track!`));
     }
-    return await response.json()
+    return ok(TrackSchema.parse(await response.json()));
 }
 
 export const deleteTrack = async (trackId: string) => {
@@ -77,7 +83,7 @@ export const deleteTrack = async (trackId: string) => {
     })
     if (response.status < 200 || response.status > 299) {
         alert("Error deleting track!");
-        return;
+        return false;
     }
 
     return true;
