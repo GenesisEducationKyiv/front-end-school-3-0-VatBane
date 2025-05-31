@@ -42,11 +42,14 @@ const TrackCreate = ({handleClose, onSave}: Props) => {
             return;
         }
         const data = await saveTrack({title, artist, album, genres, coverImage});
-        if (data == null) {
+
+        if (data.isOk()) {
+            handleClose();
+            onSave(data.value);
+        }
+        else {
             return;
         }
-        handleClose();
-        onSave(data);
     }
 
     return (
