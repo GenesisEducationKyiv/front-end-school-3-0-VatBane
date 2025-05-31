@@ -1,3 +1,5 @@
+import {err, ok, Result} from "neverthrow";
+
 import {API_BASE_URL} from "./constant.ts";
 
 export const fetchGenres = async () => {
@@ -6,8 +8,8 @@ export const fetchGenres = async () => {
     if (!response.ok) {
         alert("Failed to load genres.");
         console.log(await response.text());
-        return
+        return err(new Error("Failed to load genres!"));
     }
 
-    return await response.json();
+    return ok(await response.json());
 }

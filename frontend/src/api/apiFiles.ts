@@ -1,4 +1,7 @@
 import {API_BASE_URL} from "./constant.ts";
+import {Result, ok, err} from "neverthrow";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const removeFile = async (trackId: string) => {
     const response = await fetch(`${API_BASE_URL}/tracks/${trackId}/file`, {
@@ -24,7 +27,7 @@ export const uploadFile = async (trackId: string, file: File) => {
 
     if (!response.ok) {
         alert("Error uploading track!")
-        return;
+        return false;
     }
 
     return true;
@@ -34,7 +37,7 @@ export const fetchTrackAudio = async (fileName: string) => {
     const response = await fetch(`${API_BASE_URL}/files/` + fileName);
     if (response.status < 200 || response.status > 299) {
         alert("This track do not have file!")
-        return;
+        return err(new Error(`Could not fetch track ${fileName}`));
     }
-    return await response.blob();
+    return ok(await response.blob());
 }

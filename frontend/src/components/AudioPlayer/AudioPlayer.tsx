@@ -92,11 +92,13 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
         }
 
         const trackAudio = await fetchTrackAudio(currentTrack.audioFile);
-        if (!trackAudio) {
+        if (trackAudio.isOk()) {
+            setAudioTrack(URL.createObjectURL(trackAudio.value));
+        }
+        if (trackAudio.isErr()) {
             alert("Audio not loaded! Try again!");
             return
         }
-        setAudioTrack(URL.createObjectURL(trackAudio));
     }
 
     const progressBarStyles = (currentValue: number, maxValue: number) => {
