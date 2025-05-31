@@ -6,9 +6,8 @@
   "scripts": {
     "start": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint src/**/*.ts src/**/*.tsx",
-    "preview": "vite preview",
-    "format": "eslint src/**/*.ts src/**/*.tsx --format"
+    "lint": "eslint music-editor",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@mobily/ts-belt": "^3.13.1",
