@@ -11,9 +11,9 @@ import { removeFile } from "../../api/apiFiles.ts";
 import { Track } from "../../schemas/track.ts";
 
 interface Props {
-  track: Track;
-  handleClose: () => void;
-  onApply: (trackId: string, track: Track) => void;
+    track: Track;
+    handleClose: () => void;
+    onApply: (trackId: string, track: Track) => void;
 }
 
 const TrackEdit = (props: Props) => {
