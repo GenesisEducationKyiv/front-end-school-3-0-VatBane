@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
-import {Track} from "../types/Track.ts";
 import {Filters} from "../types/Filters.ts";
 import {fetchTracks} from "../api/apiTracks.ts";
+import {Track} from "../schemas/track.ts";
 
 
 const useTracks = (page: number, filters: Filters) => {
@@ -11,9 +11,16 @@ const useTracks = (page: number, filters: Filters) => {
 
     const fetchData = async () => {
         setIsLoading(true);
+
         const data = await fetchTracks(page, filters);
-        setTracks(data.data.map((track: Track) => track));
-        setTotalPages(data.meta.totalPages);
+        if (data.isOk()) {
+            setTracks(data.value.data.map((track) => track));
+            setTotalPages(data.value.meta.totalPages);
+        } else {
+            setTracks([]);
+            alert(data.error.message);
+        }
+
         setIsLoading(false);
     }
 

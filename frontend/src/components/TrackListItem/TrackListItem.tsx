@@ -1,11 +1,12 @@
 import './TrackListItem.css'
-import {Track} from "../../types/Track.ts";
 import deleteIcon from '../../assets/deleteIcon.png'
 import editIcon from '../../assets/editIcon.png'
 import uploadIcon from '../../assets/uploadIcon.png'
 import emptyCover from '../../assets/emptyCover.png'
 import {deleteTrack} from "../../api/apiTracks.ts";
 import {uploadFile} from "../../api/apiFiles.ts";
+import React from "react";
+import {Track} from "../../schemas/track.ts";
 
 
 interface Props {
@@ -13,7 +14,7 @@ interface Props {
     onDelete: (track: Track) => void;
     handleEditClick: (track: Track) => void;
     setCurrentTrack: (track: Track) => void;
-    onContextMenu: (e: any, track: Track) => void;
+    onContextMenu: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, track: Track) => void;
     onClick: (trackId: string) => void;
     isSelected: boolean;
     onUpload: () => void;

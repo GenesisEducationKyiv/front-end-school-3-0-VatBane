@@ -12,7 +12,7 @@ export const removeFile = async (trackId: string) => {
     }
 }
 
-export const uploadFile = async (trackId: string, file: any) => {
+export const uploadFile = async (trackId: string, file: File) => {
     // packing and sending request
     const formData = new FormData();
     formData.append("file", file);

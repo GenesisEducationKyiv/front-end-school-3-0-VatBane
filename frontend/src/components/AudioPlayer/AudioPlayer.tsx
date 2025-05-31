@@ -1,11 +1,11 @@
 import {ChangeEvent, useEffect, useRef, useState} from "react";
-import {Track} from "../../types/Track.ts";
 import './AudioPlayer.css'
 import emptyCover from "../../assets/emptyCover.png";
 import playIcon from "../../assets/playIcon.png";
 import pauseIcon from "../../assets/pauseIcon.png";
 import {fetchTrackAudio} from "../../api/apiFiles.ts";
 import {VolumeIcon} from "./VolumeIcon.tsx";
+import {Track} from "../../schemas/track.ts";
 
 interface Props {
     isVisible: boolean;
@@ -72,6 +72,11 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
     };
 
     const loadAudioTrack = async () => {
+        if (audioRef.current === null) {
+            console.error("Audio player initialized incorrectly!")
+            return
+        }
+
         if (!currentTrack) {
             return
         }
@@ -123,7 +128,7 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
                    onLoadedMetadata={handleLoadedMetadata}
                    onCanPlayThrough={handleCanPlayThrough}
                    ref={audioRef}
-                   src={audioTrack ?? ""}
+                   src={audioTrack ?? undefined}
                    preload="auto"
             />
 

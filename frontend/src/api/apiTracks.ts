@@ -1,10 +1,16 @@
-import {Filters} from "../types/Filters.ts";
-import {TrackMeta} from "../types/Track.ts";
 import {API_BASE_URL} from "./constant.ts";
 import {O, pipe, S} from "@mobily/ts-belt";
+import { TrackResponseSchema, TrackResponse } from "../schemas/track.ts";
+
+import { Filters } from "../types/Filters.ts";
+import { Track, TrackMeta } from "../types/Track.ts";
+import { Result, ok, err} from "neverthrow"
+import {z} from "zod/v4";
 
 export const fetchTracks = async (page: number, filters: Filters) => {
     const params = new URLSearchParams()
+
+export const fetchTracks = async (page: number, filters: Filters): Promise<Result<TrackResponse, Error>> => {
 
     params.set("page", pipe(
         page,
@@ -38,11 +44,15 @@ export const fetchTracks = async (page: number, filters: Filters) => {
 
     const response = await fetch(`${API_BASE_URL}/tracks?` + params.toString())
     if (!response.ok) {
-        console.log(await response.json());
-        alert("Failed to load tracks!");
-        return
+        return err(new Error(`Failed to load tracks`));
     }
-    return await response.json();
+    try {
+        const data = TrackResponseSchema.parse(await response.json());
+        return ok(data);
+    } catch (error) {
+        console.log(error);
+        return err(new Error(`Failed to load tracks`));
+    }
 }
 
 export const bulkDeleteTracks = async (ids: string[]) => {
