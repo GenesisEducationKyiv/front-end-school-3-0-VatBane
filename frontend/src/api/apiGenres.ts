@@ -1,13 +1,15 @@
+import {err, ok, Result} from "neverthrow";
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const fetchGenres = async () => {
+export const fetchGenres = async (): Promise<Result<string[], Error>> => {
     const response = await fetch(`${API_BASE_URL}/genres`);
 
     if (!response.ok) {
         alert("Failed to load genres.");
         console.log(await response.text());
-        return
+        return err(new Error("Failed to load genres!"));
     }
 
-    return await response.json();
+    return ok(await response.json());
 }
