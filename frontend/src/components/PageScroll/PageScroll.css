@@ -1,0 +1,31 @@
+.page-scroll-container {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.page-scroll {
+
+}
+
+.page-number {
+    font-size: 16px;
+    border-radius: 4px;
+    margin: 2px;
+}
+
+.page-number:hover {
+    background: #7E22CE;
+}
+
+.selected-page {
+    background: #9333EA;
+}
+
+.selected-page:hover {
+    background: #9333EA;
+}
