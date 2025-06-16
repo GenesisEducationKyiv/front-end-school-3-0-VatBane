@@ -1,8 +1,8 @@
-import {Track} from "../../types/Track.ts";
 import TrackListItem from "../TrackListItem/TrackListItem.tsx";
 import "./TrackList.css"
-import {useState} from "react";
+import React, {useState} from "react";
 import TrackEdit from "../TrackEdit/TrackEdit.tsx";
+import {Track} from "../../schemas/track.ts";
 
 
 interface ContextMenu {
@@ -27,7 +27,7 @@ const TrackList = (props: Props) => {
     const [showModalEdit, setShowModalEdit] = useState<boolean>(false);
     const [trackToEdit, setTrackToEdit] = useState<Track>();
 
-    const handleContextMenu = (e: any, track: Track) => {
+    const handleContextMenu = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, track: Track) => {
         e.preventDefault();
 
         setContextMenu({
@@ -143,11 +143,15 @@ const TrackList = (props: Props) => {
                 </div>
             )}
 
-            {showModalEdit && <TrackEdit track={trackToEdit}
-                                         handleClose={() => {
-                                             setShowModalEdit(false)
-                                         }}
-                                         onApply={props.onEditApply}/>}
+            {
+                showModalEdit &&
+                trackToEdit &&
+                <TrackEdit track={trackToEdit}
+                           handleClose={() => {
+                               setShowModalEdit(false)
+                           }}
+                           onApply={props.onEditApply}/>
+            }
 
         </div>
     )

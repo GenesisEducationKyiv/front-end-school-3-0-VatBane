@@ -1,7 +1,6 @@
 import './TrackListPage.css'
 import {useState} from "react";
 import FilterPanel from "../../components/FilterPanel/FilterPanel.tsx";
-import {Track} from "../../types/Track.ts";
 import {Filters} from "../../types/Filters.ts";
 import useFilterStore from "../../stores/FilterStore.ts";
 import useTracks from "../../hooks/useTracks.ts";
@@ -12,6 +11,7 @@ import AudioPlayer from "../../components/AudioPlayer/AudioPlayer.tsx";
 import TrackCreate from "../../components/TrackCreate/TrackCreate.tsx";
 import {bulkDeleteTracks} from "../../api/apiTracks.ts";
 import Loader from "../../components/Loader/Loader.tsx";
+import {Track} from "../../schemas/track.ts";
 // import Loader from "../../components/Loader/Loader.tsx";
 
 const TrackListPage = () => {

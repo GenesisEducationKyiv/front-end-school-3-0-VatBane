@@ -1,7 +1,6 @@
 import './TrackEdit.css'
 import {ChangeEvent, useState} from "react";
 import TagInput from "../TagInput/TagInput.tsx";
-import {Track, TrackMeta} from "../../types/Track.ts";
 import useGenres from "../../hooks/useGenres.ts";
 import musicIcon from "../../assets/musicIcon.png"
 import saveIcon from "../../assets/saveIcon.png"
@@ -9,21 +8,21 @@ import {updateTrack} from "../../api/apiTracks.ts";
 import uploadIcon from "../../assets/uploadIcon.png";
 import removeIcon from "../../assets/removeIcon.png"
 import {removeFile} from "../../api/apiFiles.ts"
+import {Track} from "../../schemas/track.ts";
 
 
 interface Props {
     track: Track;
     handleClose: () => void;
-    onApply: (trackId: string, track: TrackMeta) => void;
+    onApply: (trackId: string, track: Track) => void;
 }
 
 const TrackEdit = ({track, handleClose, onApply}: Props) => {
     const [title, setTitle] = useState<string>(track.title);
     const [artist, setArtist] = useState<string>(track.artist);
-    const [album, setAlbum] = useState<string>(track.album);
+    const [album, setAlbum] = useState<string>(track.album ?? "");
     const [genres, setGenres] = useState<string[]>(track.genres);
-    const [audioFile, setAudioFile] = useState<string>(track.audioFile);
-    const [fileBlob, setFileBlob] = useState<string>(track.audioFile);
+    const [audioFile, setAudioFile] = useState<string>(track.audioFile ?? "");
     const [coverImage, setCoverImage] = useState<string>(track.coverImage ?? "");
     const allowedTypes = ["audio/mp3", "audio/wav", "audio/mpeg", "audio/x-wav"];
 
@@ -35,12 +34,14 @@ const TrackEdit = ({track, handleClose, onApply}: Props) => {
 
     const onApplyChanges = async () => {
         if (!window.confirm("Are you sure you want to apply changes?")) return;
+
         const data = await updateTrack(track.id, {title, artist, album, genres, coverImage});
-        if (data == null) {
+        if (data.isOk()) {
+            handleClose();
+            onApply(track.id, data.value);
+        } else {
             return;
         }
-        handleClose();
-        onApply(track.id, data);
     }
 
     const onUploadClick = async (file: File) => {
