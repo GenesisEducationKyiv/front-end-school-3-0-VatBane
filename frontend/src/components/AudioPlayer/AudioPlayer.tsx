@@ -5,6 +5,7 @@ import emptyCover from "../../assets/emptyCover.png";
 import playIcon from "../../assets/playIcon.png";
 import pauseIcon from "../../assets/pauseIcon.png";
 import {fetchTrackAudio} from "../../api/apiFiles.ts";
+import {VolumeIcon} from "./VolumeIcon.tsx";
 
 interface Props {
     isVisible: boolean;
@@ -93,20 +94,6 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
         setAudioTrack(URL.createObjectURL(trackAudio));
     }
 
-    const VolumeIcon = () => {
-        return (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                {volume > 0 && (
-                    <>
-                        <path d="M15 8a5 5 0 0 1 0 8"/>
-                        {volume > 0.5 && <path d="M18 5a9 9 0 0 1 0 14"/>}
-                    </>
-                )}
-            </svg>
-        );
-    }
-
     const progressBarStyles = (currentValue: number, maxValue: number) => {
         return {
             background: `linear-gradient(to right, #7E22CE ${currentValue / maxValue * 100}%, #27272A ${currentValue / maxValue * 100}%)`,
@@ -170,7 +157,7 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
                 </div>
 
                 <div className={"audio-player-volume"}>
-                    <VolumeIcon/>
+                    <VolumeIcon volume={volume} />
                     <input type="range" min="0" max="1" step="0.01" value={volume} onChange={handleVolumeChange}
                            className="progress-bar-input"
                            style={progressBarStyles(volume, 1)}
