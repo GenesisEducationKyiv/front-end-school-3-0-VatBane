@@ -1,8 +1,7 @@
-import {useEffect, useState} from "react";
-import {Filters} from "../types/Filters.ts";
-import {fetchTracks} from "../api/apiTracks.ts";
-import {Track} from "../schemas/track.ts";
-
+import { useEffect, useState } from "react";
+import { Filters } from "../types/Filters.ts";
+import { fetchTracks } from "../api/apiTracks.ts";
+import { Track } from "../schemas/track.ts";
 
 const useTracks = (page: number, filters: Filters) => {
     const [tracks, setTracks] = useState<Track[]>([]);
@@ -22,13 +21,13 @@ const useTracks = (page: number, filters: Filters) => {
         }
 
         setIsLoading(false);
-    }
+    };
 
     useEffect(() => {
-        fetchData()
-    }, [page, filters])
+        fetchData();
+    }, [page, filters]);
 
-    return {tracks, totalPages, isLoading, refetch: fetchData};
-}
+    return { tracks, totalPages, isLoading, refetch: fetchData };
+};
 
 export default useTracks;

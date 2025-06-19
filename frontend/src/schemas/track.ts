@@ -1,5 +1,4 @@
-import { z } from "zod/v4"
-
+import { z } from "zod/v4";
 
 export const TrackSchema = z.object({
     title: z.string(),
@@ -13,8 +12,7 @@ export const TrackSchema = z.object({
     createdAt: z.string().transform((val) => new Date(val)),
     updatedAt: z.string().transform((val) => new Date(val)),
 });
-export type Track = z.infer<typeof TrackSchema>
-
+export type Track = z.infer<typeof TrackSchema>;
 
 export const TrackResponseSchema = z.object({
     data: z.array(TrackSchema),
@@ -23,6 +21,6 @@ export const TrackResponseSchema = z.object({
         page: z.number().positive(),
         limit: z.number().positive(),
         totalPages: z.number().nonnegative(),
-    })
-})
-export type TrackResponse = z.infer<typeof TrackResponseSchema>
+    }),
+});
+export type TrackResponse = z.infer<typeof TrackResponseSchema>;

@@ -6,8 +6,9 @@
   "scripts": {
     "start": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint music-editor",
-    "preview": "vite preview"
+    "lint": "eslint src/**/*.ts src/**/*.tsx",
+    "preview": "vite preview",
+    "format": "eslint src/**/*.ts src/**/*.tsx --format"
   },
   "dependencies": {
     "neverthrow": "^8.2.0",

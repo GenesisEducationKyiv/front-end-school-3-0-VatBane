@@ -1,4 +1,4 @@
-import {err, ok, Result} from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -12,4 +12,4 @@ export const fetchGenres = async (): Promise<Result<string[], Error>> => {
     }
 
     return ok(await response.json());
-}
+};
