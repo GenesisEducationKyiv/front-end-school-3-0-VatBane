@@ -1,4 +1,4 @@
-import {err, ok, Result} from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 
 import {API_BASE_URL} from "./constant.ts";
 
@@ -12,4 +12,4 @@ export const fetchGenres = async () => {
     }
 
     return ok(await response.json());
-}
+};
