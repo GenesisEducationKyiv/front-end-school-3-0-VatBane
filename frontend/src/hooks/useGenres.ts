@@ -1,22 +1,22 @@
-import {useEffect, useState} from "react";
-import {fetchGenres} from "../api/apiGenres";
+import { useEffect, useState } from "react";
+import { fetchGenres } from "../api/apiGenres";
 
 const useGenres = () => {
-    const [genres, setGenres] = useState<string[]>()
+    const [genres, setGenres] = useState<string[]>();
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await fetchGenres()
+            const data = await fetchGenres();
             if (data.isOk()) {
-                setGenres(data.value)
+                setGenres(data.value);
             } else {
                 setGenres([]);
             }
-        }
+        };
         fetchData();
     }, []);
 
-    return genres
-}
+    return genres;
+};
 
 export default useGenres;
