@@ -96,10 +96,8 @@ const AudioPlayer = ({ isVisible, currentTrack, onClose }: Props) => {
         const trackAudio = await fetchTrackAudio(currentTrack.audioFile);
         if (trackAudio.isOk()) {
             setAudioTrack(URL.createObjectURL(trackAudio.value));
-        }
-        if (trackAudio.isErr()) {
-            alert("Audio not loaded! Try again!");
-            return;
+        } else {
+            alert(trackAudio.error);
         }
     };
 
