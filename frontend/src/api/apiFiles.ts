@@ -1,5 +1,5 @@
+import { ok, err } from "neverthrow";
 import {API_BASE_URL} from "./constant.ts";
-import {Result, ok, err} from "neverthrow";
 
 
 export const removeFile = async (trackId: string) => {
@@ -28,5 +28,5 @@ export const uploadFile = async (trackId: string, file: File) => {
 export const fetchTrackAudio = async (fileName: string) => {
     const response = await fetch(`${API_BASE_URL}/files/` + fileName);
 
-    return response.ok ? ok(await response.blob()) : err(`Could not fetch track ${fileName}`)
+    return response.ok ? ok(await response.blob()) : err(`Could not fetch track ${fileName}`);
 };
