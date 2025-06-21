@@ -82,8 +82,12 @@ const TrackEdit = (props: Props) => {
     const handleDelete = async (trackId: string) => {
         if (!window.confirm("Are you sure you want delete audio file?")) return;
 
-        await removeFile(trackId);
-        setAudioFile("");
+        const response = await removeFile(trackId);
+        if (response.isOk()) {
+            setAudioFile("")
+        } else {
+            alert(response.error)
+        }
     };
 
     return (

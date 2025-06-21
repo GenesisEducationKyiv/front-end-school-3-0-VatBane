@@ -37,15 +37,13 @@ const TrackListItem = (props: Props) => {
     const onUploadClick = async (file: File) => {
         if (!file) return; // prevent saving empty file
 
-        // check MIME type
         if (!allowedTypes.includes(file.type)) {
             alert("Allowed only .mp3 and .wav files!");
             return;
         }
 
-        // process response
-        if (!(await uploadFile(props.track.id, file))) return;
-        props.onUpload();
+        const response = await uploadFile(props.track.id, file)
+        if (response.isOk()) props.onUpload();
     };
 
     return (
