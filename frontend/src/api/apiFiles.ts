@@ -1,4 +1,4 @@
-import { Result, ok, err } from "neverthrow";
+import { ok, err } from "neverthrow";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
