@@ -49,6 +49,7 @@ const TrackEdit = (props: Props) => {
             props.handleClose();
             props.onApply(props.track.id, data.value);
         } else {
+            alert(data.error)
             return;
         }
     };

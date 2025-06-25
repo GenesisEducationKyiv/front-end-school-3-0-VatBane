@@ -46,7 +46,7 @@ const TrackCreate = ({ handleClose, onSave }: Props) => {
             handleClose();
             onSave(data.value);
         } else {
-            return;
+            alert(data.error)
         }
     };
 

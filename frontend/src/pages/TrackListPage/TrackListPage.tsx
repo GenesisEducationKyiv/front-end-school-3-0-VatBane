@@ -41,7 +41,10 @@ const TrackListPage = () => {
     };
 
     const handleBulkDelete = async (tracks: string[]) => {
-        await bulkDeleteTracks(tracks);
+        const response = await bulkDeleteTracks(tracks);
+        if (response.isErr()) {
+            alert(response.error);
+        }
         await refetch();
     };
 

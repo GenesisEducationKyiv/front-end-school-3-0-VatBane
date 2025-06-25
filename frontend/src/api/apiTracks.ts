@@ -44,16 +44,16 @@ export const fetchTracks = async (page: number, filters: Filters): Promise<Resul
         O.getWithDefault(String("desc")),
     ));
 
-    const response = await fetch(`${API_BASE_URL}/tracks?` + params.toString())
+    const response = await fetch(`${API_BASE_URL}/tracks?` + params.toString());
     if (!response.ok) {
-        return err(new Error(`Failed to load tracks`));
+        return err("Failed to load tracks!");
     }
     try {
         const data = TrackResponseSchema.parse(await response.json());
         return ok(data);
     } catch (error) {
         console.log(error);
-        return err(new Error(`Failed to load tracks`));
+        return err("Failed to load tracks!");
     }
 };
 
@@ -65,24 +65,17 @@ export const bulkDeleteTracks = async (ids: string[]) => {
         },
         body: JSON.stringify({ ids }),
     });
-    if (response.status < 200 || response.status > 299) {
-        alert("Error occured while deleting tracks! Try again!");
-    }
-    return;
+
+    return response.ok ? ok() : err("Failed to delete tracks!")
 };
 
 export const saveTrack = async (track: TrackMeta) => {
     const response = await fetch(`${API_BASE_URL}/tracks`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({...track})
-    })
-    if (response.status < 200 || response.status > 299) {
-        console.log(await response.json());
-        alert("Error occurred while saving track!");
-        return err(new Error(`Failed to save track!`));
-    }
-    return ok(TrackSchema.parse(await response.json()));
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...track }),
+    });
+    return response.ok ? ok(TrackSchema.parse(await response.json())) : err("Failed to save track!");
 };
 
 export const updateTrack = async (trackId: string, track: TrackMeta) => {
@@ -93,21 +86,14 @@ export const updateTrack = async (trackId: string, track: TrackMeta) => {
         },
         body: JSON.stringify({ ...track }),
     });
-    if (response.status !== 200) {
-        alert("Error occurred while saving track!");
-        return err(new Error(`Failed to update track!`));
-    }
-    return ok(TrackSchema.parse(await response.json()));
+
+    return response.ok ? ok(TrackSchema.parse(await response.json())) : err("Failed to update track!");
 };
 
 export const deleteTrack = async (trackId: string) => {
     const response = await fetch(`${API_BASE_URL}/tracks/${trackId}`, {
         method: "DELETE",
     });
-    if (response.status < 200 || response.status > 299) {
-        alert("Error deleting track!");
-        return false;
-    }
 
-    return true;
+    return response.ok ? ok() : err("Failed to delete track!");
 };
