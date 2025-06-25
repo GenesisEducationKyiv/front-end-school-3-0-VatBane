@@ -17,7 +17,7 @@ const useTracks = (page: number, filters: Filters) => {
             setTotalPages(data.value.meta.totalPages);
         } else {
             setTracks([]);
-            alert(data.error.message);
+            alert(data.error);
         }
 
         setIsLoading(false);

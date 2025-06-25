@@ -31,7 +31,12 @@ const TrackListItem = (props: Props) => {
         )
             return;
 
-        if (!(await deleteTrack(props.track.id))) props.onDelete(props.track);
+        const response = await deleteTrack(props.track.id);
+        if (response.isOk()) {
+            props.onDelete(props.track);
+        } else {
+            alert(response.error)
+        }
     };
 
     const onUploadClick = async (file: File) => {

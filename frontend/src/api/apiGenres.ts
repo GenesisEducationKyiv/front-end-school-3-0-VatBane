@@ -1,15 +1,9 @@
 import { err, ok } from "neverthrow";
+import { API_BASE_URL } from "./constant.ts";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const fetchGenres = async () => {
     const response = await fetch(`${API_BASE_URL}/genres`);
 
-    if (!response.ok) {
-        alert("Failed to load genres.");
-        console.log(await response.text());
-        return err("Failed to load genres!");
-    }
-
-    return ok(await response.json());
+    return response.ok ? ok(await response.json()) : err("Failed to load genres!");
 };
