@@ -5,6 +5,7 @@ import emptyCover from "../../assets/emptyCover.png";
 import playIcon from "../../assets/playIcon.png";
 import pauseIcon from "../../assets/pauseIcon.png";
 import {fetchTrackAudio} from "../../api/apiFiles.ts";
+import { formatTime } from "../../utils/formatTime.ts";
 import {VolumeIcon} from "./VolumeIcon.tsx";
 
 interface Props {
@@ -61,14 +62,6 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
         if (audioRef.current) {
             audioRef.current.currentTime = seekTime;
         }
-    };
-
-    const formatTime = (time: number) => {
-        if (isNaN(time)) return "0:00";
-
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60).toString().padStart(2, '0');
-        return `${minutes}:${seconds}`;
     };
 
     const loadAudioTrack = async () => {
