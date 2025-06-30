@@ -66,7 +66,7 @@ const TrackCreate = ({handleClose, onSave}: Props) => {
 
                 <div className='modal-input'>
                     <div className='input-block'>
-                        <label title={'track-title'} data-testid="input-title">Title</label>
+                        <label title={'track-title'} data-testid="input-title" htmlFor={""}>Title</label>
                         <input type='text' placeholder='Track title' value={title}
                                onChange={(e) => {
                                    setTitle(e.target.value)

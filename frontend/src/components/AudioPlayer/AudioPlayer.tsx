@@ -111,7 +111,7 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
     }, [currentTrack]);
 
     return (
-        <div className={`audio-player-panel ${isVisible ? "open" : ""}`}>
+        <div className={`audio-player-panel ${isVisible ? "open" : ""}`} id={"audio-player"}>
             <audio onTimeUpdate={handleTimeUpdate}
                    onLoadedMetadata={handleLoadedMetadata}
                    onCanPlayThrough={handleCanPlayThrough}
