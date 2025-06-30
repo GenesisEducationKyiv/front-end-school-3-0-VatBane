@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { formatTime } from "../../utils/formatTime.ts";
+import { formatTime } from "../../src/utils/formatTime";
+
 
 describe("formatTime", () => {
     it('formats 0 seconds as 0:00', () => {

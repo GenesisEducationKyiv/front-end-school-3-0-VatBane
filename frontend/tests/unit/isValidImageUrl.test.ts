@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { isValidImageUrl } from "../../utils/validationUtils.ts";
+import { isValidImageUrl } from "../../src/utils/validationUtils";
+
 
 describe("isValidImageUrl", () => {
     it("returns true for valid image url", () => {
