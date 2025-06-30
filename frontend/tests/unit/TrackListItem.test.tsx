@@ -5,7 +5,6 @@ import TrackListItem from "../../src/components/TrackListItem/TrackListItem";
 import { FilesApiClient } from "../../src/api/apiFiles";
 import { TracksApiClient } from "../../src/api/apiTracks";
 
-// Mock the ApiClient
 vi.mock('../../src/api/apiFiles', () => ({
     FilesApiClient: {
         uploadFile: vi.fn()
@@ -19,19 +18,16 @@ vi.mock('../../src/api/apiTracks', () => ({
 }));
 
 
-// Mock images
 vi.mock('/src/assets/emptyCover.png', () => ({ default: 'empty-cover.png' }));
 vi.mock('/src/assets/uploadIcon.png', () => ({ default: 'upload-icon.png' }));
 vi.mock('/src/assets/editIcon.png', () => ({ default: 'edit-icon.png' }));
 vi.mock('/src/assets/deleteIcon.png', () => ({ default: 'delete-icon.png' }));
 
-// Mock window.confirm
 Object.defineProperty(window, 'confirm', {
     writable: true,
     value: vi.fn()
 });
 
-// Mock window.alert
 Object.defineProperty(window, 'alert', {
     writable: true,
     value: vi.fn()

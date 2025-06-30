@@ -53,7 +53,6 @@ export class TracksApiClient {
             body: JSON.stringify({...track})
         })
         if (response.status < 200 || response.status > 299) {
-            console.log(await response.json());
             alert("Error occurred while saving track!");
             return null;
         }

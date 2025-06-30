@@ -27,13 +27,11 @@ test.describe('AudioPlayer Component', () => {
         const audio = page.locator('audio');
         await expect(audio).toHaveAttribute('src', /blob:/);
 
-        // Wait for audio to be ready and playing
         await page.waitForFunction(() => {
             const audioEl = document.querySelector('audio');
             return audioEl && !audioEl.paused && audioEl.readyState >= 2;
         });
 
-        // Double-check with property
         const isPaused = await audio.evaluate(el => el.paused);
         expect(isPaused).toBe(false);
     })

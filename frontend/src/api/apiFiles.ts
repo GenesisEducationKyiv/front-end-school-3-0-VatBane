@@ -8,13 +8,11 @@ export class FilesApiClient {
 
         if (!response.ok) {
             alert("Failed to delete track!")
-            console.log(await response.json())
             return
         }
     }
 
     static async uploadFile(trackId: string, file: any): Promise<boolean | undefined> {
-        // packing and sending request
         const formData = new FormData();
         formData.append("file", file);
 
