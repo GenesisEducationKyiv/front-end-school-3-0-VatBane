@@ -200,13 +200,10 @@ describe('TrackListItem', () => {
     });
 
     it('handles empty file selection', async () => {
-        const user = userEvent.setup();
-
         render(<TrackListItem {...defaultProps} />);
 
         const input = screen.getByTestId('upload-track-1');
 
-        // Simulate selecting no file
         fireEvent.change(input, { target: { files: [] } });
 
         expect(FilesApiClient.uploadFile).not.toHaveBeenCalled();
@@ -218,7 +215,6 @@ describe('TrackListItem', () => {
 
         const img = screen.getByAltText('coverImage');
 
-        // Simulate image load error
         fireEvent.error(img);
 
         expect(img).toHaveAttribute('src', 'empty-cover.png');
