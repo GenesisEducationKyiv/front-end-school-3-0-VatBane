@@ -39,7 +39,6 @@ export class TracksApiClient {
 
         const response = await fetch(`${API_BASE_URL}/tracks?` + params.toString())
         if (!response.ok) {
-            console.log(await response.json());
             alert("Failed to load tracks!");
             return
         }
