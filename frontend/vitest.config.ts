@@ -7,5 +7,6 @@ export default defineConfig({
         environment: 'jsdom',
         globals: true, // Optional: enables global test functions like describe, it, expect
         setupFiles: ["./tests/setupTests.ts"],
+        include: ["./tests/unit/*", "./tests/integration/*"],
     },
 })
