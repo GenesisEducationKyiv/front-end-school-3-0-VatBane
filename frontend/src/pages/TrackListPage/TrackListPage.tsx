@@ -12,15 +12,17 @@ import AudioPlayer from "../../components/AudioPlayer/AudioPlayer.tsx";
 import TrackCreate from "../../components/TrackCreate/TrackCreate.tsx";
 import {bulkDeleteTracks} from "../../api/apiTracks.ts";
 import Loader from "../../components/Loader/Loader.tsx";
+import useAudioStore from "../../stores/AudioStore.ts";
 // import Loader from "../../components/Loader/Loader.tsx";
 
 const TrackListPage = () => {
     const [page, setPage] = useState<number>(1);
     const [showModalCreate, setShowModalCreate] = useState<boolean>(false);
-    const [showPlayer, setShowPlayer] = useState<boolean>(false);
-    const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
     const filters: Filters = useFilterStore(state => state.filters);
     const {tracks, totalPages, isLoading, refetch} = useTracks(page, filters);
+
+    const { setCurrentTrack } = useAudioStore();
+    const { setIsPlayerVisible } = useAudioStore();
 
     const updatePagination = (page: number) => {
         if (page > totalPages)
@@ -70,17 +72,13 @@ const TrackListPage = () => {
                            onUpload={refetch}
                            setCurrentTrack={(track: Track) => {
                                setCurrentTrack(track)
-                               setShowPlayer(true);
+                               setIsPlayerVisible(true);
                            }}
                 />
             )}
 
             <PageScroll page={page} totalPages={totalPages} updatePagination={updatePagination}/>
-            <AudioPlayer
-                isVisible={showPlayer}
-                currentTrack={currentTrack}
-                onClose={() => {setShowPlayer(false)}}
-            />
+            <AudioPlayer />
             {showModalCreate && <TrackCreate handleClose={handleClose} onSave={onTrackSave} />}
         </div>
     )

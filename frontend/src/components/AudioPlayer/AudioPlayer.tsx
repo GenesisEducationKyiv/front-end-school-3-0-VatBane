@@ -1,25 +1,24 @@
 import {ChangeEvent, useEffect, useRef, useState} from "react";
-import {Track} from "../../types/Track.ts";
 import './AudioPlayer.css'
 import emptyCover from "../../assets/emptyCover.png";
 import playIcon from "../../assets/playIcon.png";
 import pauseIcon from "../../assets/pauseIcon.png";
 import {fetchTrackAudio} from "../../api/apiFiles.ts";
 import {VolumeIcon} from "./VolumeIcon.tsx";
+import useAudioStore from "../../stores/AudioStore.ts";
 
-interface Props {
-    isVisible: boolean;
-    currentTrack: Track | null;
-    onClose: () => void;
-}
 
-const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
+const AudioPlayer = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(0.5);
     const [audioTrack, setAudioTrack] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
+    const currentTrack = useAudioStore(state => state.currentTrack);
+    const isVisible = useAudioStore(state => state.isPlayerVisible);
+
+    const { setIsPlayerVisible } = useAudioStore();
 
     const togglePlayPause = () => {
         if (isPlaying) {
@@ -162,7 +161,7 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
                            className="progress-bar-input"
                            style={progressBarStyles(volume, 1)}
                     />
-                    <button onClick={onClose} className="player-close-button">X</button>
+                    <button onClick={() => setIsPlayerVisible(true)} className="player-close-button">X</button>
                 </div>
             </div>
         </div>

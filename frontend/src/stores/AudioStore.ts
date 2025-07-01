@@ -1,20 +1,20 @@
-import {create} from "zustand/react";
-import {Track} from "../types/Track.ts";
+import { create } from "zustand/react";
+import { Track } from "../types/Track.ts";
 
 interface AudioStore {
-    track: Track | null;
-    audioTrack: string | null;
+    currentTrack: Track | null;
+    isPlayerVisible: boolean;
 
-    setAudioTrack: (track: Track, audioTrack: string) => void;
+    setCurrentTrack: (track: Track) => void;
+    setIsPlayerVisible: (isPlayerVisible: boolean) => void;
 }
 
 const useAudioStore = create<AudioStore>((set) => ({
-    track: null,
-    audioTrack: null,
+    currentTrack: null,
+    isPlayerVisible: false,
 
-    setAudioTrack: (track: Track, audioTrack: string) => set(() => ({
-        track, audioTrack,
-    }))
+    setCurrentTrack: (track: Track) => set((state) => ({ currentTrack: track })),
+    setIsPlayerVisible: (isPlayerVisible: boolean) => set((state) => ({ isPlayerVisible: isPlayerVisible }))
 }));
 
 export default useAudioStore;
