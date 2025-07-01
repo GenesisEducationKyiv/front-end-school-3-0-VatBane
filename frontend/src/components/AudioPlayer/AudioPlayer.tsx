@@ -1,26 +1,24 @@
 import {ChangeEvent, useEffect, useRef, useState} from "react";
-import {Track} from "../../types/Track.ts";
 import './AudioPlayer.css'
 import emptyCover from "../../assets/emptyCover.png";
 import playIcon from "../../assets/playIcon.png";
 import pauseIcon from "../../assets/pauseIcon.png";
-import { formatTime } from "../../utils/formatTime.ts";
+import {fetchTrackAudio} from "../../api/apiFiles.ts";
 import {VolumeIcon} from "./VolumeIcon.tsx";
-import { FilesApiClient } from "../../api/apiFiles.ts";
+import useAudioStore from "../../stores/AudioStore.ts";
 
-interface Props {
-    isVisible: boolean;
-    currentTrack: Track | null;
-    onClose: () => void;
-}
 
-const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
+const AudioPlayer = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(0.5);
     const [audioTrack, setAudioTrack] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
+    const currentTrack = useAudioStore(state => state.currentTrack);
+    const isVisible = useAudioStore(state => state.isPlayerVisible);
+
+    const { setIsPlayerVisible } = useAudioStore();
 
     const togglePlayPause = () => {
         if (isPlaying) {
@@ -64,6 +62,14 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
         }
     };
 
+    const formatTime = (time: number) => {
+        if (isNaN(time)) return "0:00";
+
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60).toString().padStart(2, '0');
+        return `${minutes}:${seconds}`;
+    };
+
     const loadAudioTrack = async () => {
         if (!currentTrack) {
             return
@@ -79,7 +85,7 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
             return;
         }
 
-        const trackAudio = await FilesApiClient.fetchTrackAudio(currentTrack.audioFile);
+        const trackAudio = await fetchTrackAudio(currentTrack.audioFile);
         if (!trackAudio) {
             alert("Audio not loaded! Try again!");
             return
@@ -111,7 +117,7 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
     }, [currentTrack]);
 
     return (
-        <div className={`audio-player-panel ${isVisible ? "open" : ""}`} id={"audio-player"}>
+        <div className={`audio-player-panel ${isVisible ? "open" : ""}`}>
             <audio onTimeUpdate={handleTimeUpdate}
                    onLoadedMetadata={handleLoadedMetadata}
                    onCanPlayThrough={handleCanPlayThrough}
@@ -155,7 +161,7 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
                            className="progress-bar-input"
                            style={progressBarStyles(volume, 1)}
                     />
-                    <button onClick={onClose} className="player-close-button">X</button>
+                    <button onClick={() => setIsPlayerVisible(true)} className="player-close-button">X</button>
                 </div>
             </div>
         </div>
