@@ -1,16 +1,13 @@
-import {Track} from "../../types/Track.ts";
+import { Track } from "../../types/Track.ts";
 import TrackListItem from "../TrackListItem/TrackListItem.tsx";
 import "./TrackList.css"
-import {useState} from "react";
+import { useState } from "react";
 import TrackEdit from "../TrackEdit/TrackEdit.tsx";
+import ContextMenu from "../ContextMenu/ContextMenu.tsx";
+import { Point } from "../../utils/commonTypes.ts";
+import useContextMenuStore from "../../stores/ContextMenuStore.ts";
+import { add } from "@mobily/ts-belt/dist/types/Number";
 
-
-interface ContextMenu {
-    visible: boolean;
-    x: number;
-    y: number;
-    trackId: string;
-}
 
 interface Props {
     tracks: Track[];
@@ -22,45 +19,44 @@ interface Props {
 }
 
 const TrackList = (props: Props) => {
-    const [selectedTracks, setSelectedTracks] = useState<string[]>([]);
-    const [contextMenu, setContextMenu] = useState<ContextMenu>({visible: false, x: 0, y: 0, trackId: ""});
+    const [showContextMenu, setShowContextMenu] = useState(false);
+    const [contextMenuPosition, setContextMenuPosition] = useState<Point>({ x: 0, y: 0 });
     const [showModalEdit, setShowModalEdit] = useState<boolean>(false);
     const [trackToEdit, setTrackToEdit] = useState<Track>();
+
+    const currentTrackId = useContextMenuStore(state => state.currentTrackId);
+    const selectedTracks = useContextMenuStore(state => state.selectedTracks);
+
+    const { addTrack, removeTrack, setSelectedTracks, setCurrentTrackId} = useContextMenuStore();
 
     const handleContextMenu = (e: any, track: Track) => {
         e.preventDefault();
 
-        setContextMenu({
-            visible: true,
-            x: e.pageX,
-            y: e.pageY,
-            trackId: track.id,
-        });
-
+        setCurrentTrackId(track.id);
+        setShowContextMenu(true);
+        setContextMenuPosition({ x: e.pageX, y: e.pageY });
     }
 
     const handleSelect = (trackId: string) => {
         if (selectedTracks.includes(trackId)) {
-            setSelectedTracks(selectedTracks.filter(track => track !== trackId))
-            return
+            removeTrack(trackId);
+        } else {
+            addTrack(trackId)
         }
-
-        setContextMenu({visible: false, x: 0, y: 0, trackId: ""});
-        setSelectedTracks([...selectedTracks, trackId])
+        setShowContextMenu(false);
     }
 
-    // Handle clicking outside to close context menu
     const handleClickOutside = () => {
-        setContextMenu({...contextMenu, visible: false});
+        setShowContextMenu(false);
     };
 
     const handleClick = (trackId: string) => {
         if (selectedTracks.length === 0) return;
 
         if (selectedTracks.includes(trackId)) {
-            setSelectedTracks(selectedTracks.filter(track => track !== trackId));
+            removeTrack(trackId);
         } else {
-            setSelectedTracks([...selectedTracks, trackId]);
+            addTrack(trackId);
         }
     }
 
@@ -76,12 +72,13 @@ const TrackList = (props: Props) => {
         if (selectedTracks.length > 0)
             props.handleBulkDelete(selectedTracks);
         else {
-            props.handleBulkDelete([contextMenu.trackId]);
+            props.handleBulkDelete([currentTrackId]);
         }
         setSelectedTracks([])
     }
 
-    const handleEditClick = () => {
+    const handleEditClick = (trackId: string) => {
+        setTrackToEdit(props.tracks.find(track => track.id === trackId))
         setShowModalEdit(true);
     }
 
@@ -100,8 +97,7 @@ const TrackList = (props: Props) => {
                 <TrackListItem track={track} key={track.id}
                                onDelete={props.handleTrackDelete}
                                handleEditClick={() => {
-                                   setTrackToEdit(track);
-                                   handleEditClick()
+                                   handleEditClick(track.id)
                                }}
                                setCurrentTrack={props.setCurrentTrack}
                                onClick={handleClick}
@@ -112,36 +108,43 @@ const TrackList = (props: Props) => {
                 />
             ))}
 
-            {contextMenu.visible && (
-                <div
-                    className="context-menu"
-                    style={{top: contextMenu.y, left: contextMenu.x}}
-                >
-                    <ul className="context-menu-list">
-                        <li className="context-menu-item" onClick={() => {
-                            handleSelect(contextMenu.trackId)
-                        }}
-                            data-testid="select-mode-toggle"
-                        >{selectedTracks.includes(contextMenu.trackId) ? "Undo" : "Select"}</li>
-                        {selectedTracks.length <= 1 && (
-                            <li className="context-menu-item"
-                                onClick={() => {
-                                    // @ts-ignore there is always can be needed track, because in props we receive
-                                    // N-tracks and we can call contextMenu only on these N-tracks
-                                    setTrackToEdit(props.tracks.find(track => track.id === contextMenu.trackId))
-                                    handleEditClick()
-                                }}
-                            >Edit</li>
-                        )}
-                        <li className="context-menu-item"
-                            onClick={() => {
-                                if (!window.confirm(`Are you sure you want to delete ${selectedTracks.length} tracks?`)) return
-                                onBulkDelete()
-                            }} data-testid="bulk-delete-button">Delete
-                        </li>
-                    </ul>
-                </div>
+            {showContextMenu && (
+                <ContextMenu position={contextMenuPosition}
+                             handleSelect={handleSelect}
+                             handleEditClick={handleEditClick}
+                             handleDeleteClick={onBulkDelete}
+                />
             )}
+            {/*{contextMenu.visible && (*/}
+            {/*    <div*/}
+            {/*        className="context-menu"*/}
+            {/*        style={{top: contextMenu.y, left: contextMenu.x}}*/}
+            {/*    >*/}
+            {/*        <ul className="context-menu-list">*/}
+            {/*            <li className="context-menu-item" onClick={() => {*/}
+            {/*                handleSelect(contextMenu.trackId)*/}
+            {/*            }}*/}
+            {/*                data-testid="select-mode-toggle"*/}
+            {/*            >{selectedTracks.includes(contextMenu.trackId) ? "Undo" : "Select"}</li>*/}
+            {/*            {selectedTracks.length <= 1 && (*/}
+            {/*                <li className="context-menu-item"*/}
+            {/*                    onClick={() => {*/}
+            {/*                        // @ts-ignore there is always can be needed track, because in props we receive*/}
+            {/*                        // N-tracks and we can call contextMenu only on these N-tracks*/}
+            {/*                        setTrackToEdit(props.tracks.find(track => track.id === contextMenu.trackId))*/}
+            {/*                        handleEditClick()*/}
+            {/*                    }}*/}
+            {/*                >Edit</li>*/}
+            {/*            )}*/}
+            {/*            <li className="context-menu-item"*/}
+            {/*                onClick={() => {*/}
+            {/*                    if (!window.confirm(`Are you sure you want to delete ${selectedTracks.length} tracks?`)) return*/}
+            {/*                    onBulkDelete()*/}
+            {/*                }} data-testid="bulk-delete-button">Delete*/}
+            {/*            </li>*/}
+            {/*        </ul>*/}
+            {/*    </div>*/}
+            {/*)}*/}
 
             {showModalEdit && <TrackEdit track={trackToEdit}
                                          handleClose={() => {
