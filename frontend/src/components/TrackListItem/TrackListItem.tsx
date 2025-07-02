@@ -4,8 +4,8 @@ import deleteIcon from '../../assets/deleteIcon.png'
 import editIcon from '../../assets/editIcon.png'
 import uploadIcon from '../../assets/uploadIcon.png'
 import emptyCover from '../../assets/emptyCover.png'
-import {TracksApiClient} from "../../api/apiTracks.ts";
-import { FilesApiClient } from "../../api/apiFiles.ts";
+import {deleteTrack} from "../../api/apiTracks.ts";
+import {uploadFile} from "../../api/apiFiles.ts";
 
 
 interface Props {
@@ -25,7 +25,7 @@ const TrackListItem = (props: Props) => {
     const onDeleteClick = async () => {
         if (!window.confirm(`Are you sure you want to delete ${props.track.title}?`)) return
 
-        if (!await TracksApiClient.deleteTrack(props.track.id))
+        if (!await deleteTrack(props.track.id))
             props.onDelete(props.track);
 
     }
@@ -33,14 +33,12 @@ const TrackListItem = (props: Props) => {
     const onUploadClick = async (file: File) => {
         if (!file) return;  // prevent saving empty file
 
-        // check MIME type
         if (!allowedTypes.includes(file.type)) {
             alert('Allowed only .mp3 and .wav files!')
             return;
         }
 
-        // process response
-        if (!await FilesApiClient.uploadFile(props.track.id, file)) return
+        if (!await uploadFile(props.track.id, file)) return
         props.onUpload()
     }
 
@@ -78,10 +76,11 @@ const TrackListItem = (props: Props) => {
             <div className="actions-panel">
                 <label>
                     <input className="file-input" type="file" accept="audio/mp3, audio/wav"
-                           onChange={async (e) => {
+                           onChange={(e) => {
                                const file = e.target.files?.[0];
                                if (!file) return;  // safety check
-                               await onUploadClick(file)
+
+                               onUploadClick(file)
                            }}
                            data-testid={`upload-track-${props.track.id}`}
                     />
