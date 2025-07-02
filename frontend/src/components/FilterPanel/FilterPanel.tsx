@@ -23,10 +23,8 @@ const FilterPanel = ({handleAddClick}: Props) => {
     const [limit, setLimit] = useState<number>(10);
     const debouncedValue = useDebounceValue(localSearchValue, 500)
 
-    // import store itself
     const filters: Filters = useFilterStore(state => state.filters);
 
-    // import actions from store
     const {
         setSearchValue,
         setFilters,

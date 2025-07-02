@@ -6,7 +6,6 @@ import TrackEdit from "../TrackEdit/TrackEdit.tsx";
 import ContextMenu from "../ContextMenu/ContextMenu.tsx";
 import { Point } from "../../utils/commonTypes.ts";
 import useContextMenuStore from "../../stores/ContextMenuStore.ts";
-import { add } from "@mobily/ts-belt/dist/types/Number";
 
 
 interface Props {
@@ -115,36 +114,6 @@ const TrackList = (props: Props) => {
                              handleDeleteClick={onBulkDelete}
                 />
             )}
-            {/*{contextMenu.visible && (*/}
-            {/*    <div*/}
-            {/*        className="context-menu"*/}
-            {/*        style={{top: contextMenu.y, left: contextMenu.x}}*/}
-            {/*    >*/}
-            {/*        <ul className="context-menu-list">*/}
-            {/*            <li className="context-menu-item" onClick={() => {*/}
-            {/*                handleSelect(contextMenu.trackId)*/}
-            {/*            }}*/}
-            {/*                data-testid="select-mode-toggle"*/}
-            {/*            >{selectedTracks.includes(contextMenu.trackId) ? "Undo" : "Select"}</li>*/}
-            {/*            {selectedTracks.length <= 1 && (*/}
-            {/*                <li className="context-menu-item"*/}
-            {/*                    onClick={() => {*/}
-            {/*                        // @ts-ignore there is always can be needed track, because in props we receive*/}
-            {/*                        // N-tracks and we can call contextMenu only on these N-tracks*/}
-            {/*                        setTrackToEdit(props.tracks.find(track => track.id === contextMenu.trackId))*/}
-            {/*                        handleEditClick()*/}
-            {/*                    }}*/}
-            {/*                >Edit</li>*/}
-            {/*            )}*/}
-            {/*            <li className="context-menu-item"*/}
-            {/*                onClick={() => {*/}
-            {/*                    if (!window.confirm(`Are you sure you want to delete ${selectedTracks.length} tracks?`)) return*/}
-            {/*                    onBulkDelete()*/}
-            {/*                }} data-testid="bulk-delete-button">Delete*/}
-            {/*            </li>*/}
-            {/*        </ul>*/}
-            {/*    </div>*/}
-            {/*)}*/}
 
             {showModalEdit && <TrackEdit track={trackToEdit}
                                          handleClose={() => {
