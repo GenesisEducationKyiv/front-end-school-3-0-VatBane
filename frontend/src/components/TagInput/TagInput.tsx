@@ -2,9 +2,9 @@ import { useState } from "react";
 import "./TagInput.css";
 
 interface Props {
-  tags: string[];
-  setTags: (tags: string[]) => void;
-  possibleTags: string[] | undefined;
+    tags: string[];
+    setTags: (tags: string[]) => void;
+    possibleTags: string[] | undefined;
 }
 
 const TagInput = ({ tags, setTags, possibleTags }: Props) => {
@@ -19,9 +19,9 @@ const TagInput = ({ tags, setTags, possibleTags }: Props) => {
 
         if (
             trimmed &&
-      possibleTags &&
-      !tags.includes(trimmed) &&
-      possibleTags.includes(trimmed)
+            possibleTags &&
+            !tags.includes(trimmed) &&
+            possibleTags.includes(trimmed)
         ) {
             setTags([...tags, trimmed]);
         }
@@ -30,7 +30,7 @@ const TagInput = ({ tags, setTags, possibleTags }: Props) => {
     };
 
     const availableTags =
-    possibleTags?.filter((tag) => !tags.includes(tag)) || [];
+        possibleTags?.filter((tag) => !tags.includes(tag)) || [];
 
     return (
         <div className="tag-input-container">
@@ -42,7 +42,7 @@ const TagInput = ({ tags, setTags, possibleTags }: Props) => {
                             className="remove-tag-button"
                             onClick={() => removeTag(tag)}
                         >
-              X
+                            X
                         </button>
                     </div>
                 ))}
@@ -50,7 +50,7 @@ const TagInput = ({ tags, setTags, possibleTags }: Props) => {
                     className="add-tag-button"
                     onClick={() => setShowSelector(!showSelector)}
                 >
-          +
+                    +
                 </button>
             </div>
 

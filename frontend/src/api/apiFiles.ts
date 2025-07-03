@@ -1,40 +1,30 @@
+import { err, ok } from "neverthrow";
 import { API_BASE_URL } from "./constant.ts";
 
 export class FilesApiClient {
-    static async removeFile(trackId: string): Promise<void> {
+    static async removeFile(trackId: string) {
         const response = await fetch(`${API_BASE_URL}/tracks/${trackId}/file`, {
             method: 'DELETE',
-        })
+        });
 
-        if (!response.ok) {
-            alert("Failed to delete track!")
-            return
-        }
+        return response.ok ? ok() : err("Failed to delete track!");
     }
 
-    static async uploadFile(trackId: string, file: any): Promise<boolean | undefined> {
+    static async uploadFile(trackId: string, file: Blob) {
         const formData = new FormData();
         formData.append("file", file);
 
         const response = await fetch(`${API_BASE_URL}/tracks/` + trackId + "/upload", {
             method: "POST",
             body: formData,
-        })
+        });
 
-        if (!response.ok) {
-            alert("Error uploading track!")
-            return;
-        }
-
-        return true;
+        return response.ok ? ok() : err("Error uploading track!");
     }
 
-    static async fetchTrackAudio(fileName: string): Promise<Blob | undefined> {
+    static async fetchTrackAudio(fileName: string) {
         const response = await fetch(`${API_BASE_URL}/files/` + fileName);
-        if (response.status < 200 || response.status > 299) {
-            alert("This track do not have file!")
-            return;
-        }
-        return await response.blob();
+
+        return response.ok ? ok(await response.blob()) : err("This track do not have file!");
     }
 }

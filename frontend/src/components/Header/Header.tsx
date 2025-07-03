@@ -4,9 +4,9 @@ import musicIcon from "../../assets/musicIcon.png";
 const Header = () => {
     return (
         <header>
-            <img src={musicIcon} alt="musicIcon" className="app-icon" />
+            <img src={musicIcon} alt="musicIcon" className="app-icon"/>
             <h2 className="app-title" data-testid="tracks-header">
-        Track list
+                Track list
             </h2>
         </header>
     );
