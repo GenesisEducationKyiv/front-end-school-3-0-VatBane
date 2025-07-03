@@ -1,0 +1,14 @@
+{
+  "title": "asd",
+  "artist": "ads",
+  "album": "asd",
+  "genres": [
+    "Pop"
+  ],
+  "coverImage": "https://t3.ftcdn.net/jpg/02/73/22/74/360_F_273227473_N0WRQuX3uZCJJxlHKYZF44uaJAkh2xLG.jpg",
+  "slug": "asd",
+  "id": "1749476156318",
+  "createdAt": "2025-06-09T13:35:56.318Z",
+  "updatedAt": "2025-06-09T13:36:03.676Z",
+  "audioFile": "1749476156318.wav"
+}
