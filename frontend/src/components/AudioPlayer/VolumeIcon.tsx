@@ -14,4 +14,4 @@ export const VolumeIcon = (props: Props) => {
             )}
         </svg>
     );
-}
+};

@@ -13,9 +13,11 @@
   },
   "dependencies": {
     "@mobily/ts-belt": "^3.13.1",
+    "neverthrow": "^8.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.2",
+    "zod": "^3.25.42",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

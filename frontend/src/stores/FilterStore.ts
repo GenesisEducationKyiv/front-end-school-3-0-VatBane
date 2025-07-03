@@ -1,5 +1,5 @@
-import {create} from "zustand/react";
-import {Filters} from "../types/Filters.ts";
+import { create } from "zustand/react";
+import { Filters } from "../types/Filters.ts";
 
 interface FilterStore {
     filters: Filters;
@@ -20,37 +20,43 @@ const defaultFilters: Filters = {
     genre: "",
     sortBy: "createdAt",
     sortOrder: "desc",
-    limit: 10
-}
+    limit: 10,
+};
 
 const useFilterStore = create<FilterStore>((set) => ({
-    filters: {...defaultFilters},
+    filters: { ...defaultFilters },
 
-    setSearchValue: (searchValue: string) => set((state) => ({
-        filters: {...state.filters, searchValue},
-    })),
-    setSortBy: (sortBy: "title" | "artist" | "album" | "createdAt") => set((state) => ({
-        filters: {...state.filters, sortBy},
-    })),
-    setSortOrder: (sortOrder: "desc" | "asc") => set((state) => ({
-        filters: {...state.filters, sortOrder}
-    })),
-    setArtist: (artist: string) => set((state) => ({
-        filters: {...state.filters, artist}
-    })),
-    setGenre: (genre: string) => set((state) => ({
-        filters: {...state.filters, genre},
-    })),
-    setLimit: (limit: number) => set((state) => ({
-        filters: {...state.filters, limit},
-    })),
+    setSearchValue: (searchValue: string) =>
+        set((state) => ({
+            filters: { ...state.filters, searchValue },
+        })),
+    setSortBy: (sortBy: "title" | "artist" | "album" | "createdAt") =>
+        set((state) => ({
+            filters: { ...state.filters, sortBy },
+        })),
+    setSortOrder: (sortOrder: "desc" | "asc") =>
+        set((state) => ({
+            filters: { ...state.filters, sortOrder },
+        })),
+    setArtist: (artist: string) =>
+        set((state) => ({
+            filters: { ...state.filters, artist },
+        })),
+    setGenre: (genre: string) =>
+        set((state) => ({
+            filters: { ...state.filters, genre },
+        })),
+    setLimit: (limit: number) =>
+        set((state) => ({
+            filters: { ...state.filters, limit },
+        })),
 
-    setFilters: (filters: Filters) => set((state) => ({
-        filters: filters,
-    })),
+    setFilters: (filters: Filters) =>
+        set((state) => ({
+            filters: filters,
+        })),
 
-    resetFilters: () => set({filters: {...defaultFilters}})
-
-}))
+    resetFilters: () => set({ filters: { ...defaultFilters } }),
+}));
 
 export default useFilterStore;
