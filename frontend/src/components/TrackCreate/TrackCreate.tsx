@@ -1,12 +1,12 @@
-import './TrackCreate.css'
-import {ChangeEvent, useState} from "react";
+import './TrackCreate.css';
+import { ChangeEvent, useState } from "react";
 import TagInput from "../TagInput/TagInput.tsx";
 import useGenres from "../../hooks/useGenres.ts";
-import musicIcon from "../../assets/musicIcon.png"
-import saveIcon from "../../assets/saveIcon.png"
+import musicIcon from "../../assets/musicIcon.png";
+import saveIcon from "../../assets/saveIcon.png";
 import { TracksApiClient } from "../../api/apiTracks.ts";
-import {isValidImageUrl} from "../../utils/validationUtils.ts";
-import {Track} from "../../schemas/track.ts";
+import { isValidImageUrl } from "../../utils/validationUtils.ts";
+import { Track } from "../../schemas/track.ts";
 
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
     onSave: (track: Track) => void;
 }
 
-const TrackCreate = ({handleClose, onSave}: Props) => {
+const TrackCreate = ({ handleClose, onSave }: Props) => {
     const [title, setTitle] = useState<string>('');
     const [artist, setArtist] = useState<string>('');
     const [album, setAlbum] = useState<string>('');
@@ -25,7 +25,7 @@ const TrackCreate = ({handleClose, onSave}: Props) => {
 
     const handleCoverImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         setCoverImage(e.target.value);
-    }
+    };
 
     const onApply = async () => {
         if (title.trim() === "") {
@@ -36,23 +36,24 @@ const TrackCreate = ({handleClose, onSave}: Props) => {
             alert("Please enter artist!");
             return;
         }
-        const result = isValidImageUrl(coverImage)
+        const result = isValidImageUrl(coverImage);
         if (!result) {
-            alert("Cover image url is invalid!")
+            alert("Cover image url is invalid!");
             return;
         }
-        const data = await TracksApiClient.saveTrack({title, artist, album, genres, coverImage});
-        if (data == null) {
-            return;
+        const data = await TracksApiClient.saveTrack({ title, artist, album, genres, coverImage });
+        if (data.isOk()) {
+            onSave(data.value);
+            handleClose();
+        } else {
+            alert(data.error);
         }
-        handleClose();
-        onSave(data);
-    }
+    };
 
     return (
         <div className='modal-back' onClick={handleClose}>
             <div className="modal" onClick={(e) => e.stopPropagation()}
-                 data-testid="track-form"
+                data-testid="track-form"
             >
                 <div className="modal-header">
                     <div className="modal-title-container">
@@ -68,28 +69,28 @@ const TrackCreate = ({handleClose, onSave}: Props) => {
                     <div className='input-block'>
                         <label title={'track-title'} data-testid="input-title" htmlFor={""}>Title</label>
                         <input type='text' placeholder='Track title' value={title}
-                               onChange={(e) => {
-                                   setTitle(e.target.value)
-                               }} title={'track-title'}/>
+                            onChange={(e) => {
+                                setTitle(e.target.value);
+                            }} title={'track-title'}/>
                     </div>
 
                     <div className="input-block">
                         <label title={'track-artist'} data-testid="input-artist">Artist</label>
                         <input type='text' placeholder='Track artist' value={artist}
-                               title={'track-artist'}
-                               onChange={(e) => {
-                                   setArtist(e.target.value)
-                               }}
+                            title={'track-artist'}
+                            onChange={(e) => {
+                                setArtist(e.target.value);
+                            }}
                         />
                     </div>
 
                     <div className="input-block">
                         <label title='track-album' data-testid="input-album">Album</label>
                         <input type='text' placeholder='Track album' value={album}
-                               title='track-album'
-                               onChange={(e) => {
-                                   setAlbum(e.target.value)
-                               }}
+                            title='track-album'
+                            onChange={(e) => {
+                                setAlbum(e.target.value);
+                            }}
                         />
                     </div>
 
@@ -101,7 +102,7 @@ const TrackCreate = ({handleClose, onSave}: Props) => {
                     <div className="input-block">
                         <label title={'track-cover-image'} data-testid="input-cover-image">Cover Image</label>
                         <input type='text' placeholder='Cover Image' value={coverImage}
-                               onChange={handleCoverImageChange}/>
+                            onChange={handleCoverImageChange}/>
                     </div>
                 </div>
 
@@ -113,7 +114,7 @@ const TrackCreate = ({handleClose, onSave}: Props) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default TrackCreate;

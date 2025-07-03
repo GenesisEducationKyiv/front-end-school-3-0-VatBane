@@ -10,7 +10,7 @@ const useGenres = () => {
             if (data.isOk()) {
                 setGenres(data.value);
             } else {
-                alert(data.error)
+                alert(data.error);
                 setGenres([]);
             }
         };

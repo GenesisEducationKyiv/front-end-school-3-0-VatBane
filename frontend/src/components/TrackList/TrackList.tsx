@@ -1,12 +1,12 @@
-import { Track } from "../../types/Track.ts";
 import TrackListItem from "../TrackListItem/TrackListItem.tsx";
-import "./TrackList.css"
+import "./TrackList.css";
 import { useState } from "react";
 import TrackEdit from "../TrackEdit/TrackEdit.tsx";
 import ContextMenu from "../ContextMenu/ContextMenu.tsx";
 import { Point } from "../../utils/commonTypes.ts";
 import useContextMenuStore from "../../stores/ContextMenuStore.ts";
-
+import { MouseEvent } from "react";
+import { Track } from "../../schemas/track.ts";
 
 interface Props {
     tracks: Track[];
@@ -28,22 +28,22 @@ const TrackList = (props: Props) => {
 
     const { addTrack, removeTrack, setSelectedTracks, setCurrentTrackId} = useContextMenuStore();
 
-    const handleContextMenu = (e: any, track: Track) => {
+    const handleContextMenu = (e: MouseEvent, track: Track) => {
         e.preventDefault();
 
         setCurrentTrackId(track.id);
         setShowContextMenu(true);
         setContextMenuPosition({ x: e.pageX, y: e.pageY });
-    }
+    };
 
     const handleSelect = (trackId: string) => {
         if (selectedTracks.includes(trackId)) {
             removeTrack(trackId);
         } else {
-            addTrack(trackId)
+            addTrack(trackId);
         }
         setShowContextMenu(false);
-    }
+    };
 
     const handleClickOutside = () => {
         setShowContextMenu(false);
@@ -57,7 +57,7 @@ const TrackList = (props: Props) => {
         } else {
             addTrack(trackId);
         }
-    }
+    };
 
     const toggleAll = () => {
         if (selectedTracks.length === props.tracks.length)
@@ -65,7 +65,7 @@ const TrackList = (props: Props) => {
         else {
             setSelectedTracks(props.tracks.map(track => track.id));
         }
-    }
+    };
 
     const onBulkDelete = () => {
         if (selectedTracks.length > 0)
@@ -73,56 +73,56 @@ const TrackList = (props: Props) => {
         else {
             props.handleBulkDelete([currentTrackId]);
         }
-        setSelectedTracks([])
-    }
+        setSelectedTracks([]);
+    };
 
     const handleEditClick = (trackId: string) => {
-        setTrackToEdit(props.tracks.find(track => track.id === trackId))
+        setTrackToEdit(props.tracks.find(track => track.id === trackId));
         setShowModalEdit(true);
-    }
+    };
 
     return (
         <div className="track-list" onClick={handleClickOutside}>
             <div className={`all-selector ${selectedTracks.length === 0 ? "" : "active"} 
             ${selectedTracks.length === props.tracks.length ? "all" : ""}`}
-                 onClick={() => {
-                     toggleAll()
-                 }}
-                 data-testid="select-all"
+            onClick={() => {
+                toggleAll();
+            }}
+            data-testid="select-all"
             >
             </div>
 
             {props.tracks.length === 0 ? <div>Nothing there</div> : props.tracks.map((track) => (
                 <TrackListItem track={track} key={track.id}
-                               onDelete={props.handleTrackDelete}
-                               handleEditClick={() => {
-                                   handleEditClick(track.id)
-                               }}
-                               setCurrentTrack={props.setCurrentTrack}
-                               onClick={handleClick}
-                               onContextMenu={handleContextMenu}
-                               isSelected={selectedTracks.includes(track.id)}
-                               onUpload={props.onUpload}
-                               data-testid={`track-item-${track.id}`}
+                    onDelete={props.handleTrackDelete}
+                    handleEditClick={() => {
+                        handleEditClick(track.id);
+                    }}
+                    setCurrentTrack={props.setCurrentTrack}
+                    onClick={handleClick}
+                    onContextMenu={handleContextMenu}
+                    isSelected={selectedTracks.includes(track.id)}
+                    onUpload={props.onUpload}
+                    data-testid={`track-item-${track.id}`}
                 />
             ))}
 
             {showContextMenu && (
                 <ContextMenu position={contextMenuPosition}
-                             handleSelect={handleSelect}
-                             handleEditClick={handleEditClick}
-                             handleDeleteClick={onBulkDelete}
+                    handleSelect={handleSelect}
+                    handleEditClick={handleEditClick}
+                    handleDeleteClick={onBulkDelete}
                 />
             )}
 
             {showModalEdit && <TrackEdit track={trackToEdit}
-                                         handleClose={() => {
-                                             setShowModalEdit(false)
-                                         }}
-                                         onApply={props.onEditApply}/>}
+                handleClose={() => {
+                    setShowModalEdit(false);
+                }}
+                onApply={props.onEditApply}/>}
 
         </div>
-    )
-}
+    );
+};
 
 export default TrackList;

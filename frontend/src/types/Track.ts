@@ -5,11 +5,3 @@ export type TrackMeta = {
     genres: string[];
     coverImage?: string;
 };
-
-export interface Track extends TrackMeta {
-    id: string;
-    slug: string;
-    audioFile: string;
-    createdAt: Date;
-    updatedAt: Date;
-}

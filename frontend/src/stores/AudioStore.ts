@@ -1,5 +1,5 @@
 import { create } from "zustand/react";
-import { Track } from "../types/Track.ts";
+import { Track } from "../schemas/track.ts";
 
 interface AudioStore {
     currentTrack: Track | null;

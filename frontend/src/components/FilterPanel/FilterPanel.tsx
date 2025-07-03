@@ -1,18 +1,18 @@
-import './FilterPanel.css'
-import filterIcon from "../../assets/filterIcon.png"
-import {useEffect, useState} from "react";
+import './FilterPanel.css';
+import filterIcon from "../../assets/filterIcon.png";
+import { useEffect, useState } from "react";
 import useGenres from "../../hooks/useGenres.ts";
-import sortIcon from "../../assets/sortDescIcon.png"
-import {Filters} from "../../types/Filters.ts";
+import sortIcon from "../../assets/sortDescIcon.png";
+import { Filters } from "../../types/Filters.ts";
 import useFilterStore from "../../stores/FilterStore.ts";
-import {useDebounceValue} from "../../hooks";
+import { useDebounceValue } from "../../hooks";
 
 
 interface Props {
     handleAddClick: () => void;
 }
 
-const FilterPanel = ({handleAddClick}: Props) => {
+const FilterPanel = ({ handleAddClick }: Props) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const possibleGenres = useGenres();
     const [artist, setArtist] = useState<string>("");
@@ -21,7 +21,7 @@ const FilterPanel = ({handleAddClick}: Props) => {
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
     const [localSearchValue, setLocalSearchValue] = useState<string>("");
     const [limit, setLimit] = useState<number>(10);
-    const debouncedValue = useDebounceValue(localSearchValue, 500)
+    const debouncedValue = useDebounceValue(localSearchValue, 500);
 
     const filters: Filters = useFilterStore(state => state.filters);
 
@@ -39,38 +39,38 @@ const FilterPanel = ({handleAddClick}: Props) => {
             sortBy: sortBy,
             sortOrder: sortOrder,
             limit: limit,
-        }
+        };
 
         setFilters(newFilters);
-    }
+    };
 
     const reset = () => {
-        setArtist("")
-        setGenre("")
-        setSortBy("createdAt")
-        setSortOrder("desc")
-        resetFilters()
-    }
+        setArtist("");
+        setGenre("");
+        setSortBy("createdAt");
+        setSortOrder("desc");
+        resetFilters();
+    };
 
     useEffect(() => {
-        setSearchValue(debouncedValue)
-    }, [debouncedValue])
+        setSearchValue(debouncedValue);
+    }, [debouncedValue]);
 
     return (
         <div className='filter-panel'>
             <div className="default-filter-panel">
                 <div className="panel-container">
                     <input className="search-input" type="text" placeholder="Search by title, artist or album"
-                           value={localSearchValue} data-testid="search-input"
-                           onChange={(e) => setLocalSearchValue(e.target.value)}/>
+                        value={localSearchValue} data-testid="search-input"
+                        onChange={(e) => setLocalSearchValue(e.target.value)}/>
                     <img className="filter-button" src={filterIcon} alt="Filter"
-                         onClick={() => setIsOpen(!isOpen)}
+                        onClick={() => setIsOpen(!isOpen)}
                     />
                 </div>
 
                 <div className="add-container">
                     <button className="add-button" onClick={handleAddClick}
-                            data-testid="create-track-button">+ Add track
+                        data-testid="create-track-button">+ Add track
                     </button>
                 </div>
             </div>
@@ -82,15 +82,15 @@ const FilterPanel = ({handleAddClick}: Props) => {
                     <div className="input-container">
                         <label htmlFor="artist-input">Artist</label>
                         <input className="search-input" type="text" placeholder="Search by artist" value={artist}
-                               id="artist-input" data-testid="filter-artist"
-                               onChange={(e) => setArtist(e.target.value)}
+                            id="artist-input" data-testid="filter-artist"
+                            onChange={(e) => setArtist(e.target.value)}
                         />
                     </div>
 
                     <div className="input-container">
                         <label htmlFor="genre-input">Genre</label>
                         <select value={genre} id={"genre-input"} className="selector" data-testid="filter-genre"
-                                onChange={(e) => setGenre(e.target.value)}
+                            onChange={(e) => setGenre(e.target.value)}
                         >
                             <option value={""}>All</option>
                             {possibleGenres && possibleGenres.map((genre, i) => (
@@ -103,14 +103,14 @@ const FilterPanel = ({handleAddClick}: Props) => {
                         <label htmlFor="sort-input">Sort by</label>
                         <div className="sort-selector-container">
                             <select value={sortBy} id="sort-input" className="selector" data-testid="sort-select"
-                                    onChange={(e) => setSortBy(e.target.value)}>
+                                onChange={(e) => setSortBy(e.target.value)}>
                                 <option value={"title"}>Title</option>
                                 <option value={"artist"}>Artist</option>
                                 <option value={"album"}>Album</option>
                                 <option value={"createdAt"}>Date</option>
                             </select>
                             <img src={sortIcon} className={`sort-icon ${sortOrder}`} alt={"Order"}
-                                 onClick={() => sortOrder === "desc" ? setSortOrder("asc") : setSortOrder("desc")}
+                                onClick={() => sortOrder === "desc" ? setSortOrder("asc") : setSortOrder("desc")}
                             />
                         </div>
                     </div>
@@ -118,7 +118,7 @@ const FilterPanel = ({handleAddClick}: Props) => {
                     <div className="input-container">
                         <label htmlFor="limit-input">Tracks to show</label>
                         <input className="search-input" type="number" placeholder="Search by tracks to show"
-                               value={limit} step="5" onChange={(e) => setLimit(e.target.value)}
+                            value={limit} step="5" onChange={(e) => setLimit(e.target.value)}
                         />
                     </div>
                     <div className="advanced-filter-footer">
@@ -128,7 +128,7 @@ const FilterPanel = ({handleAddClick}: Props) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default FilterPanel;

@@ -1,9 +1,9 @@
 import "./PageScroll.css";
 
 interface Props {
-  page: number;
-  totalPages: number;
-  updatePagination: (page: number) => void;
+    page: number;
+    totalPages: number;
+    updatePagination: (page: number) => void;
 }
 
 export const PageScroll = (props: Props) => {

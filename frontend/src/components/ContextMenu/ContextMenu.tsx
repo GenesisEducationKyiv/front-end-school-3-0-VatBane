@@ -1,6 +1,6 @@
-import { Point } from "../../utils/commonTypes"
+import { Point } from "../../utils/commonTypes";
 import useContextMenuStore from "../../stores/ContextMenuStore.ts";
-import './ContextMenu.css'
+import './ContextMenu.css';
 
 
 interface Props {
@@ -24,24 +24,24 @@ const ContextMenu = (props: Props) => {
                 <li className="context-menu-item" onClick={() => {
                     props.handleSelect(currentTrackId);
                 }}
-                    data-testid="select-mode-toggle"
+                data-testid="select-mode-toggle"
                 >{selectedTracks.includes(currentTrackId) ? "Undo" : "Select"}</li>
                 {selectedTracks.length <= 1 && (
                     <li className="context-menu-item"
                         onClick={() => {
-                            props.handleEditClick(currentTrackId)
+                            props.handleEditClick(currentTrackId);
                         }}
                     >Edit</li>
                 )}
                 <li className="context-menu-item"
                     onClick={() => {
-                        if (!window.confirm(`Are you sure you want to delete ${selectedTracks.length} tracks?`)) return
-                        props.handleDeleteClick()
+                        if (!window.confirm(`Are you sure you want to delete ${selectedTracks.length} tracks?`)) return;
+                        props.handleDeleteClick();
                     }} data-testid="bulk-delete-button">Delete
                 </li>
             </ul>
         </div>
-    )
-}
+    );
+};
 
 export default ContextMenu;

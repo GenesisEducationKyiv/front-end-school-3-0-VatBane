@@ -2,9 +2,9 @@ import React from "react";
 import "./Loader.css";
 
 interface LoaderProps {
-  size?: "small" | "medium" | "large";
-  overlay?: boolean;
-  text?: string;
+    size?: "small" | "medium" | "large";
+    overlay?: boolean;
+    text?: string;
 }
 
 const Loader: React.FC<LoaderProps> = ({
