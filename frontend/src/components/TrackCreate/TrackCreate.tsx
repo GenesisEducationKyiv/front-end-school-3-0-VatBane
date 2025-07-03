@@ -5,7 +5,7 @@ import {Track} from "../../types/Track.ts";
 import useGenres from "../../hooks/useGenres.ts";
 import musicIcon from "../../assets/musicIcon.png"
 import saveIcon from "../../assets/saveIcon.png"
-import {saveTrack} from "../../api/apiTracks.ts";
+import { TracksApiClient } from "../../api/apiTracks.ts";
 import {isValidImageUrl} from "../../utils/validationUtils.ts";
 
 
@@ -41,7 +41,7 @@ const TrackCreate = ({handleClose, onSave}: Props) => {
             alert("Cover image url is invalid!")
             return;
         }
-        const data = await saveTrack({title, artist, album, genres, coverImage});
+        const data = await TracksApiClient.saveTrack({title, artist, album, genres, coverImage});
         if (data == null) {
             return;
         }
@@ -66,7 +66,7 @@ const TrackCreate = ({handleClose, onSave}: Props) => {
 
                 <div className='modal-input'>
                     <div className='input-block'>
-                        <label title={'track-title'} data-testid="input-title">Title</label>
+                        <label title={'track-title'} data-testid="input-title" htmlFor={""}>Title</label>
                         <input type='text' placeholder='Track title' value={title}
                                onChange={(e) => {
                                    setTitle(e.target.value)

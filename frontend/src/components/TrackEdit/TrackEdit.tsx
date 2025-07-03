@@ -5,10 +5,10 @@ import {Track, TrackMeta} from "../../types/Track.ts";
 import useGenres from "../../hooks/useGenres.ts";
 import musicIcon from "../../assets/musicIcon.png"
 import saveIcon from "../../assets/saveIcon.png"
-import {updateTrack} from "../../api/apiTracks.ts";
+import {TracksApiClient} from "../../api/apiTracks.ts";
 import uploadIcon from "../../assets/uploadIcon.png";
 import removeIcon from "../../assets/removeIcon.png"
-import {removeFile} from "../../api/apiFiles.ts"
+import { FilesApiClient } from "../../api/apiFiles.ts";
 
 
 interface Props {
@@ -35,7 +35,7 @@ const TrackEdit = ({track, handleClose, onApply}: Props) => {
 
     const onApplyChanges = async () => {
         if (!window.confirm("Are you sure you want to apply changes?")) return;
-        const data = await updateTrack(track.id, {title, artist, album, genres, coverImage});
+        const data = await TracksApiClient.updateTrack(track.id, {title, artist, album, genres, coverImage});
         if (data == null) {
             return;
         }
@@ -128,9 +128,9 @@ const TrackEdit = ({track, handleClose, onApply}: Props) => {
                             <img className="edit-file-upload-image" src={uploadIcon} alt='Upload'/>
                         </label>
                         {audioFile && (<img src={removeIcon} alt={"remove"} className="remove-file-button"
-                                            onClick={() => {
+                                            onClick={async () => {
                                                 if (!window.confirm("Are you sure you want delete audio file?")) return;
-                                                removeFile(track.id)
+                                                await FilesApiClient.removeFile(track.id)
                                                 setAudioFile("")
                                             }}
                         />)}

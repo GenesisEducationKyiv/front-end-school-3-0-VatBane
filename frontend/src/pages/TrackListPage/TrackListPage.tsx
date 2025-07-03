@@ -10,8 +10,8 @@ import TrackList from "../../components/TrackList/TrackList.tsx";
 import {PageScroll} from "../../components/PageScroll/PageScroll.tsx";
 import AudioPlayer from "../../components/AudioPlayer/AudioPlayer.tsx";
 import TrackCreate from "../../components/TrackCreate/TrackCreate.tsx";
-import {bulkDeleteTracks} from "../../api/apiTracks.ts";
 import Loader from "../../components/Loader/Loader.tsx";
+import { TracksApiClient } from "../../api/apiTracks.ts";
 // import Loader from "../../components/Loader/Loader.tsx";
 
 const TrackListPage = () => {
@@ -41,7 +41,7 @@ const TrackListPage = () => {
     }
 
     const handleBulkDelete = async (tracks: string[]) => {
-        await bulkDeleteTracks(tracks)
+        await TracksApiClient.bulkDeleteTracks(tracks)
         await refetch()
     }
 

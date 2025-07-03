@@ -4,8 +4,9 @@ import './AudioPlayer.css'
 import emptyCover from "../../assets/emptyCover.png";
 import playIcon from "../../assets/playIcon.png";
 import pauseIcon from "../../assets/pauseIcon.png";
-import {fetchTrackAudio} from "../../api/apiFiles.ts";
+import { formatTime } from "../../utils/formatTime.ts";
 import {VolumeIcon} from "./VolumeIcon.tsx";
+import { FilesApiClient } from "../../api/apiFiles.ts";
 
 interface Props {
     isVisible: boolean;
@@ -63,14 +64,6 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
         }
     };
 
-    const formatTime = (time: number) => {
-        if (isNaN(time)) return "0:00";
-
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60).toString().padStart(2, '0');
-        return `${minutes}:${seconds}`;
-    };
-
     const loadAudioTrack = async () => {
         if (!currentTrack) {
             return
@@ -86,7 +79,7 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
             return;
         }
 
-        const trackAudio = await fetchTrackAudio(currentTrack.audioFile);
+        const trackAudio = await FilesApiClient.fetchTrackAudio(currentTrack.audioFile);
         if (!trackAudio) {
             alert("Audio not loaded! Try again!");
             return
@@ -118,7 +111,7 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
     }, [currentTrack]);
 
     return (
-        <div className={`audio-player-panel ${isVisible ? "open" : ""}`}>
+        <div className={`audio-player-panel ${isVisible ? "open" : ""}`} id={"audio-player"}>
             <audio onTimeUpdate={handleTimeUpdate}
                    onLoadedMetadata={handleLoadedMetadata}
                    onCanPlayThrough={handleCanPlayThrough}
