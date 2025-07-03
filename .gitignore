@@ -1,6 +1,4 @@
 .idea
 *node_modules
 
-# I added backend to app to be able to find and run it at any time
-# but I think it's not needed in repository
-backend
+*test-results
