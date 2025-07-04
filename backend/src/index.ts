@@ -1,9 +1,11 @@
+import { startStandaloneServer } from "@apollo/server/standalone";
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import multipart from '@fastify/multipart';
 import fastifyStatic from '@fastify/static';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
+import { graphQLServer } from "./graphql/server.ts";
 import routes from "./routes.ts";
 import { initializeDb } from './utils/db.ts';
 import config from './config/index.ts';
@@ -77,6 +79,10 @@ async function start() {
         await fastify.listen({
             port: config.server.port,
             host: config.server.host
+        });
+
+        const { url } = await startStandaloneServer(graphQLServer, {
+            listen: { port: 4000 },
         });
 
         console.log(`Server is running on http://${config.server.host}:${config.server.port}`);
