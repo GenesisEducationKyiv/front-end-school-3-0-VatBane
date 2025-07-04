@@ -1,5 +1,5 @@
-import { getGenres } from '../utils/db';
-import { RouteHandler } from '../types';
+import { getGenres } from '../utils/db.ts';
+import type { RouteHandler } from '../types/index.ts';
 
 
 /**
