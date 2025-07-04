@@ -1,3 +1,4 @@
+import { get_list_tracks } from "../services/tracks.ts";
 import {
     createTrack,
     deleteTrack,
@@ -34,21 +35,7 @@ export const getAllTracks: RouteHandler<ListTracksQuery> = async (
     reply
 ) => {
     try {
-        const { tracks, total } = await getTracks(request.query);
-
-        const page = request.query.page || 1;
-        const limit = request.query.limit || 10;
-
-        const response: PaginatedResponse<Track> = {
-            data: tracks,
-            meta: {
-                total,
-                page,
-                limit,
-                totalPages: Math.ceil(total / limit)
-            }
-        };
-
+        const response = await get_list_tracks(request.query);
         return reply.code(200).send(response);
     } catch (error) {
         request.log.error(error);
