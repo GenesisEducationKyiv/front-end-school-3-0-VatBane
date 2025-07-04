@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { Track, QueryParams, BatchDeleteResponse } from '../types';
-import config from '../config';
+import type { Track, QueryParams, BatchDeleteResponse } from '../types/index.ts';
+import config from '../config/index.ts';
 
 /**
  * Database file paths

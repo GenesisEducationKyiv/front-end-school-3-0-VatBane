@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "fe-school-backend",
   "version": "1.0.0",
   "description": "An app for managing music tracks.",
