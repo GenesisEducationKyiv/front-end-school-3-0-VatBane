@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { number, z } from 'zod';
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 import path from 'path';
@@ -28,6 +28,9 @@ const envSchema = z.object({
     PORT: z.string().default('8000').transform(Number),
     HOST: z.string().default('0.0.0.0'),
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+
+    // GraphQL server settings
+    GRAPHQL_PORT: z.string().default('4000').transform(Number),
 
     // File storage settings
     DATA_DIR: z.string().default('./data'),
@@ -67,6 +70,10 @@ const config = {
         port: envVars.data.PORT,
         host: envVars.data.HOST,
         env: envVars.data.NODE_ENV
+    },
+
+    graphqlServer: {
+        port: envVars.data.GRAPHQL_PORT
     },
 
     storage: {

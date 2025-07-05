@@ -82,9 +82,9 @@ async function start() {
         });
 
         const { url } = await startStandaloneServer(graphQLServer, {
-            listen: { port: 4000 },
+            listen: { port: config.graphqlServer.port },
         });
-
+        console.log(`GraphQL server is running on http://localhost:${config.graphqlServer.port}`);
         console.log(`Server is running on http://${config.server.host}:${config.server.port}`);
         console.log(`Swagger documentation available on http://${config.server.host}:${config.server.port}/documentation`);
     } catch (error) {
