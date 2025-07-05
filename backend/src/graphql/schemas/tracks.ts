@@ -45,6 +45,10 @@ export const tracksSchema = `
         updatedAt: String!
     }
     
+    type Subscription {
+        tracks(filter: QueryFilter): TrackList!
+    }
+    
     type Query {
         tracks(filter: QueryFilter): TrackList!
     }
