@@ -1,7 +1,7 @@
 import type { PaginatedResponse, QueryParams, Track } from "../types/index.ts";
 import { getTracks } from "../utils/db.ts";
 
-export const get_list_tracks = async (query: QueryFilter) => {
+export const get_list_tracks = async (query: QueryParams) => {
     const { tracks, total } = await getTracks(query);
 
     const page = query.page || 1;
