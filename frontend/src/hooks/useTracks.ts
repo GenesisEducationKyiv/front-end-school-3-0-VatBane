@@ -1,27 +1,50 @@
-import {useEffect, useState} from "react";
-import {Track} from "../types/Track.ts";
-import {Filters} from "../types/Filters.ts";
-import {TracksApiClient} from "../api/apiTracks.ts";
+import { ApolloError, useSubscription } from "@apollo/client";
+import { getTracks } from "../graphql/queries";
+import { Track } from "../types/Track.ts";
+import { Filters } from "../types/Filters.ts";
+import { ListMeta } from "../utils/commonTypes";
 
-
-const useTracks = (page: number, filters: Filters) => {
-    const [tracks, setTracks] = useState<Track[]>([]);
-    const [totalPages, setTotalPages] = useState<number>(1);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const fetchData = async () => {
-        setIsLoading(true);
-        const data = await TracksApiClient.fetchTracks(page, filters);
-        setTracks(data.data.map((track: Track) => track));
-        setTotalPages(data.meta.totalPages);
-        setIsLoading(false);
-    }
-
-    useEffect(() => {
-        fetchData()
-    }, [page, filters])
-
-    return {tracks, totalPages, isLoading, refetch: fetchData};
+interface UseTracksReturn {
+    tracks: Track[];
+    listMeta: ListMeta;
+    isLoading: boolean;
+    error: ApolloError | undefined;
 }
+
+interface UseTracksParams {
+    page: number;
+    filters: Filters;
+}
+
+const useTracks = ({ page, filters }: UseTracksParams): UseTracksReturn => {
+    const { data, loading, error } = useSubscription(getTracks, {
+        variables: {
+            filter: {
+                page,
+                limit: filters.limit,
+                sort: filters.sortBy || 'title',
+                order: filters.sortOrder || 'asc',
+                search: filters.searchValue || undefined,
+                artist: filters.artist || undefined,
+                genre: filters.genre || undefined,
+            }
+        },
+        errorPolicy: 'all',
+        shouldResubscribe: true,
+        onData: (options) => {
+            console.log('New tracks data received:', options.data.data);
+        },
+        onComplete: () => {
+            console.log('Tracks subscription completed');
+        },
+    });
+
+    return {
+        tracks: data?.tracks?.data || [],
+        listMeta: data?.tracks?.meta || { page: 0, totalPages: 0, limit: filters.limit, total: 0},
+        isLoading: loading,
+        error,
+    };
+};
 
 export default useTracks;
