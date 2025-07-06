@@ -1,4 +1,4 @@
-import { useSubscription } from "@apollo/client";
+import { ApolloError, useSubscription } from "@apollo/client";
 import { getTracks } from "../graphql/queries";
 import { Track } from "../types/Track.ts";
 import { Filters } from "../types/Filters.ts";
@@ -10,9 +10,7 @@ interface UseTracksReturn {
     currentPage: number;
     limit: number;
     isLoading: boolean;
-    error: any;
-    // Note: refetch is not available with subscriptions
-    // Consider using a separate query/mutation for manual refetching if needed
+    error: ApolloError | undefined;
 }
 
 interface UseTracksParams {

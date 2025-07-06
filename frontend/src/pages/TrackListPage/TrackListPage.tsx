@@ -18,10 +18,20 @@ const TrackListPage = () => {
     const [page, setPage] = useState<number>(1);
     const [showModalCreate, setShowModalCreate] = useState<boolean>(false);
     const filters: Filters = useFilterStore(state => state.filters);
-    const { tracks, totalPages, isLoading, refetch } = useTracks(page, filters);
 
     const { setCurrentTrack } = useAudioStore();
     const { setIsPlayerVisible } = useAudioStore();
+    // Using the custom hook with GraphQL
+    const {
+        tracks,
+        totalPages,
+        isLoading,
+        error,
+    } = useTracks({
+        page,
+        limit: 10, // You can make this configurable
+        filters
+    });
 
     const updatePagination = (page: number) => {
         if (page > totalPages)
@@ -38,18 +48,27 @@ const TrackListPage = () => {
 
     const onTrackDelete = (deletedTrack: Track) => {
         console.log(deletedTrack);
-        refetch();
     };
 
     const handleBulkDelete = async (tracks: string[]) => {
         await TracksApiClient.bulkDeleteTracks(tracks);
-        await refetch();
     };
 
     const onTrackSave = (track: Track) => {
         console.log(track);
-        refetch();
     };
+
+    // Handle GraphQL errors
+    if (error && !tracks.length) {
+        return (
+            <div className="body-container">
+                <Header/>
+                <div className="error-container">
+                    <p>Error loading tracks: {error.message}</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="body-container">
@@ -67,11 +86,9 @@ const TrackListPage = () => {
             ) : (
                 <TrackList tracks={tracks}
                     onEditApply={() => {
-                        refetch();
                     }}
                     handleTrackDelete={onTrackDelete}
                     handleBulkDelete={handleBulkDelete}
-                    onUpload={refetch}
                     setCurrentTrack={(track: Track) => {
                         setCurrentTrack(track);
                         setIsPlayerVisible(true);
