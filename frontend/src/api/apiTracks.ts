@@ -1,11 +1,11 @@
-import {Filters} from "../types/Filters.ts";
-import {TrackMeta} from "../types/Track.ts";
-import {API_BASE_URL} from "./constant.ts";
-import {O, pipe, S} from "@mobily/ts-belt";
+import { Filters } from "../types/Filters.ts";
+import { TrackMeta } from "../types/Track.ts";
+import { API_BASE_URL } from "./constant.ts";
+import { O, pipe, S } from "@mobily/ts-belt";
 
 export class TracksApiClient {
     static async fetchTracks(page: number, filters: Filters) {
-        const params = new URLSearchParams()
+        const params = new URLSearchParams();
 
         params.set("page", pipe(
             page,
@@ -37,10 +37,10 @@ export class TracksApiClient {
             O.getWithDefault(String("desc")),
         ));
 
-        const response = await fetch(`${API_BASE_URL}/tracks?` + params.toString())
+        const response = await fetch(`${API_BASE_URL}/tracks?` + params.toString());
         if (!response.ok) {
             alert("Failed to load tracks!");
-            return
+            return;
         }
         return await response.json();
     }
@@ -48,15 +48,15 @@ export class TracksApiClient {
     static async saveTrack(track: TrackMeta) {
         const response = await fetch(`${API_BASE_URL}/tracks`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({...track})
-        })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...track })
+        });
         if (response.status < 200 || response.status > 299) {
             alert("Error occurred while saving track!");
             return null;
         }
 
-        return await response.json()
+        return await response.json();
     }
 
     static async updateTrack(trackId: string, track: TrackMeta) {
@@ -65,19 +65,19 @@ export class TracksApiClient {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({...track}),
-        })
+            body: JSON.stringify({ ...track }),
+        });
         if (response.status < 200 || response.status > 299) {
             alert("Error occurred while saving track!");
             return null;
         }
-        return await response.json()
+        return await response.json();
     }
 
     static async deleteTrack(trackId: string) {
         const response = await fetch(`${API_BASE_URL}/tracks/${trackId}`, {
             method: "DELETE",
-        })
+        });
         if (response.status < 200 || response.status > 299) {
             alert("Error deleting track!");
             return;
@@ -92,7 +92,7 @@ export class TracksApiClient {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ids}),
+            body: JSON.stringify({ ids }),
         });
         if (response.status < 200 || response.status > 299) {
             alert("Error occured while deleting tracks! Try again!");

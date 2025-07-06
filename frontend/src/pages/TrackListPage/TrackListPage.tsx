@@ -20,21 +20,19 @@ const TrackListPage = () => {
     const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
     const filters: Filters = useFilterStore(state => state.filters);
 
-    // Using the custom hook with GraphQL
     const {
         tracks,
-        totalPages,
+        listMeta,
         isLoading,
         error,
     } = useTracks({
         page,
-        limit: 10, // You can make this configurable
         filters
     });
 
     const updatePagination = (newPage: number) => {
-        if (newPage > totalPages)
-            newPage = totalPages;
+        if (newPage > listMeta.totalPages)
+            newPage = listMeta.totalPages;
         if (newPage < 1)
             newPage = 1;
 
@@ -57,7 +55,6 @@ const TrackListPage = () => {
         console.log(track);
     };
 
-    // Handle GraphQL errors
     if (error && !tracks.length) {
         return (
             <div className="body-container">
@@ -75,7 +72,7 @@ const TrackListPage = () => {
             <FilterPanel handleAddClick={() => {
                 setShowModalCreate(true);
             }}/>
-            <PageScroll page={page} totalPages={totalPages} updatePagination={updatePagination}/>
+            <PageScroll page={page} totalPages={listMeta.totalPages} updatePagination={updatePagination}/>
 
             {isLoading ? (
                 <div className="tracks-loading-container">
@@ -94,7 +91,7 @@ const TrackListPage = () => {
                 />
             )}
 
-            <PageScroll page={page} totalPages={totalPages} updatePagination={updatePagination}/>
+            <PageScroll page={page} totalPages={listMeta.totalPages} updatePagination={updatePagination}/>
             <AudioPlayer
                 isVisible={showPlayer}
                 currentTrack={currentTrack}
