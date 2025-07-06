@@ -108,19 +108,27 @@ const AudioPlayer = () => {
     }, [currentTrack]);
 
     useEffect(() => {
+        let shouldContinue = true;
+        
         const runLoop = async () => {
-            while (isPlaying) {
+            while (shouldContinue && isPlaying) {
                 if (currentTrack) {
+                    console.log("isPlaying");
                     const variants = ["NAME 1", "NAME 2", "NAME 3"];
                     const newName = variants[Math.floor(Math.random() * 3)];
                     const updatedTrack = { ...currentTrack, title: newName };
-                    await TracksApiClient.updateTrack(currentTrack.id, updatedTrack);
+                    TracksApiClient.updateTrack(currentTrack.id, updatedTrack);
                     await new Promise(res => setTimeout(res, 500));
                 }
             }
         };
 
         runLoop();
+
+        return () => {
+            shouldContinue = false;
+        };
+
     }, [isPlaying, currentTrack]);
 
     return (

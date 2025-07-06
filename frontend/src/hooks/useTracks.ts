@@ -2,29 +2,26 @@ import { ApolloError, useSubscription } from "@apollo/client";
 import { getTracks } from "../graphql/queries";
 import { Track } from "../types/Track.ts";
 import { Filters } from "../types/Filters.ts";
+import { ListMeta } from "../utils/commonTypes";
 
 interface UseTracksReturn {
     tracks: Track[];
-    totalPages: number;
-    total: number;
-    currentPage: number;
-    limit: number;
+    listMeta: ListMeta;
     isLoading: boolean;
     error: ApolloError | undefined;
 }
 
 interface UseTracksParams {
     page: number;
-    limit?: number;
     filters: Filters;
 }
 
-const useTracks = ({ page, limit = 10, filters }: UseTracksParams): UseTracksReturn => {
+const useTracks = ({ page, filters }: UseTracksParams): UseTracksReturn => {
     const { data, loading, error } = useSubscription(getTracks, {
         variables: {
             filter: {
                 page,
-                limit,
+                limit: filters.limit,
                 sort: filters.sortBy || 'title',
                 order: filters.sortOrder || 'asc',
                 search: filters.searchValue || undefined,
@@ -33,24 +30,18 @@ const useTracks = ({ page, limit = 10, filters }: UseTracksParams): UseTracksRet
             }
         },
         errorPolicy: 'all',
-        // Subscription-specific options
-        shouldResubscribe: true, // Resubscribe when variables change
+        shouldResubscribe: true,
         onData: (options) => {
-            // Optional: Handle new data as it arrives
             console.log('New tracks data received:', options.data.data);
         },
         onComplete: () => {
-            // Optional: Handle when subscription completes
             console.log('Tracks subscription completed');
         },
     });
 
     return {
         tracks: data?.tracks?.data || [],
-        totalPages: data?.tracks?.meta?.totalPages || 0,
-        total: data?.tracks?.meta?.total || 0,
-        currentPage: data?.tracks?.meta?.page || page,
-        limit: data?.tracks?.meta?.limit || limit,
+        listMeta: data?.tracks?.meta || { page: 0, totalPages: 0, limit: filters.limit, total: 0},
         isLoading: loading,
         error,
     };
