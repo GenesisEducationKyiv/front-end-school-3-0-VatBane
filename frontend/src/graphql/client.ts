@@ -1,8 +1,4 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
-import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-import {createClient} from "graphql-ws";
-import { GRAPHQL_URL } from "./constant.ts";
-
 import { split, HttpLink } from '@apollo/client';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
@@ -16,11 +12,6 @@ const wsLink = new GraphQLWsLink(createClient({
     url: 'ws://localhost:8000/graphql',
 }));
 
-// The split function takes three parameters:
-//
-// * A function that's called for each operation to execute
-// * The Link to use for an operation if the function returns a "truthy" value
-// * The Link to use for an operation if the function returns a "falsy" value
 const splitLink = split(
     ({ query }) => {
         const definition = getMainDefinition(query);

@@ -24,10 +24,8 @@ const TrackListPage = () => {
     const {
         tracks,
         totalPages,
-        total,
         isLoading,
         error,
-        refetch
     } = useTracks({
         page,
         limit: 10, // You can make this configurable
@@ -49,17 +47,14 @@ const TrackListPage = () => {
 
     const onTrackDelete = (deletedTrack: Track) => {
         console.log(deletedTrack);
-        refetch();
     };
 
     const handleBulkDelete = async (tracks: string[]) => {
         await TracksApiClient.bulkDeleteTracks(tracks);
-        await refetch();
     };
 
     const onTrackSave = (track: Track) => {
         console.log(track);
-        refetch();
     };
 
     // Handle GraphQL errors
@@ -69,7 +64,6 @@ const TrackListPage = () => {
                 <Header/>
                 <div className="error-container">
                     <p>Error loading tracks: {error.message}</p>
-                    <button onClick={() => refetch()}>Retry</button>
                 </div>
             </div>
         );
@@ -90,11 +84,9 @@ const TrackListPage = () => {
             ) : (
                 <TrackList tracks={tracks}
                     onEditApply={() => {
-                        refetch();
                     }}
                     handleTrackDelete={onTrackDelete}
                     handleBulkDelete={handleBulkDelete}
-                    onUpload={refetch}
                     setCurrentTrack={(track: Track) => {
                         setCurrentTrack(track);
                         setShowPlayer(true);
