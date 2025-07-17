@@ -3,12 +3,12 @@ import { z } from "zod/v4";
 export const TrackSchema = z.object({
     title: z.string(),
     artist: z.string(),
-    album: z.string().optional(),
+    album: z.string().optional().default(""),
     genres: z.string().array(),
     coverImage: z.string().optional(),
     id: z.string(),
     slug: z.string(),
-    audioFile: z.string().optional(),
+    audioFile: z.string().optional().default(""),
     createdAt: z.string().transform((val) => new Date(val)),
     updatedAt: z.string().transform((val) => new Date(val)),
 });

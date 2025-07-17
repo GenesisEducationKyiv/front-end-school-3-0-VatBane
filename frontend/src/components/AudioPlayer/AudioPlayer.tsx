@@ -1,26 +1,24 @@
-import {ChangeEvent, useEffect, useRef, useState} from "react";
-import {Track} from "../../types/Track.ts";
-import './AudioPlayer.css'
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import './AudioPlayer.css';
 import emptyCover from "../../assets/emptyCover.png";
 import playIcon from "../../assets/playIcon.png";
 import pauseIcon from "../../assets/pauseIcon.png";
-import { formatTime } from "../../utils/formatTime.ts";
-import {VolumeIcon} from "./VolumeIcon.tsx";
 import { FilesApiClient } from "../../api/apiFiles.ts";
+import { formatTime } from "../../utils/formatTime.ts";
+import { VolumeIcon } from "./VolumeIcon.tsx";
+import useAudioStore from "../../stores/AudioStore.ts";
 
-interface Props {
-    isVisible: boolean;
-    currentTrack: Track | null;
-    onClose: () => void;
-}
 
-const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
+const AudioPlayer = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(0.5);
     const [audioTrack, setAudioTrack] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
+    const currentTrack = useAudioStore(state => state.currentTrack);
+
+    const { setIsPlayerVisible } = useAudioStore();
 
     const togglePlayPause = () => {
         if (isPlaying) {
@@ -29,11 +27,9 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
             audioRef.current?.play();
         }
         setIsPlaying(!isPlaying);
-    }
+    };
 
     const handleCanPlayThrough = () => {
-        // Start playing automatically when the track is loaded
-
         if (audioRef.current) {
             audioRef.current.volume = volume;
             audioRef.current.play()
@@ -54,7 +50,7 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
         if (audioRef.current) {
             audioRef.current.volume = newVolume;
         }
-    }
+    };
 
     const handleSeek = (e: ChangeEvent<HTMLInputElement>) => {
         const seekTime = parseFloat(e.target.value);
@@ -66,10 +62,10 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
 
     const loadAudioTrack = async () => {
         if (!currentTrack) {
-            return
+            return;
         }
         if (currentTrack.audioFile == null) {
-            alert("Track do not have audio file!")
+            alert("Track do not have audio file!");
             audioRef.current?.pause();
             audioRef.current.src = "";
             setAudioTrack(null);
@@ -79,20 +75,20 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
             return;
         }
 
-        const trackAudio = await FilesApiClient.fetchTrackAudio(currentTrack.audioFile);
-        if (!trackAudio) {
-            alert("Audio not loaded! Try again!");
-            return
+        const response = await FilesApiClient.fetchTrackAudio(currentTrack.audioFile);
+        if (response.isOk()) {
+            setAudioTrack(URL.createObjectURL(response.value));
+        } else {
+            alert(response.error);
         }
-        setAudioTrack(URL.createObjectURL(trackAudio));
-    }
+    };
 
     const progressBarStyles = (currentValue: number, maxValue: number) => {
         return {
             background: `linear-gradient(to right, #7E22CE ${currentValue / maxValue * 100}%, #27272A ${currentValue / maxValue * 100}%)`,
             borderRadius: `10px`,
-        }
-    }
+        };
+    };
 
     const handleTimeUpdate = (e: ChangeEvent<HTMLAudioElement>) => {
         setCurrentTime(e.target.currentTime);
@@ -111,22 +107,22 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
     }, [currentTrack]);
 
     return (
-        <div className={`audio-player-panel ${isVisible ? "open" : ""}`} id={"audio-player"}>
+        <div className={`audio-player-panel ${isVisible ? "open" : ""}`}>
             <audio onTimeUpdate={handleTimeUpdate}
-                   onLoadedMetadata={handleLoadedMetadata}
-                   onCanPlayThrough={handleCanPlayThrough}
-                   ref={audioRef}
-                   src={audioTrack ?? ""}
-                   preload="auto"
+                onLoadedMetadata={handleLoadedMetadata}
+                onCanPlayThrough={handleCanPlayThrough}
+                ref={audioRef}
+                src={audioTrack ?? ""}
+                preload="auto"
             />
 
             <div className={"audio-player"}>
                 <div className={'audio-player-data'}>
                     <img className="cover-image" src={currentTrack?.coverImage || emptyCover} alt='coverImage'
-                         onError={(e) => {
-                             e.currentTarget.onerror = null
-                             e.currentTarget.src = emptyCover
-                         }}
+                        onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = emptyCover;
+                        }}
                     />
 
                     <div className="track-data">
@@ -137,29 +133,29 @@ const AudioPlayer = ({isVisible, currentTrack, onClose}: Props) => {
 
                 <div className={"audio-player-controls"}>
                     <img src={isPlaying ? pauseIcon : playIcon} alt={"play/pause"}
-                         onClick={togglePlayPause} className={"audio-play-button"}
+                        onClick={togglePlayPause} className={"audio-play-button"}
                     />
                     <div className={"progress-bar"}>
                         <span>{formatTime(currentTime)}</span>
                         <input type="range" min="0" max={duration} value={currentTime} onChange={handleSeek}
-                               className={"progress-bar-input"}
-                               style={progressBarStyles(currentTime, duration)}
+                            className={"progress-bar-input"}
+                            style={progressBarStyles(currentTime, duration)}
                         />
                         <span>{formatTime(duration)}</span>
                     </div>
                 </div>
 
                 <div className={"audio-player-volume"}>
-                    <VolumeIcon volume={volume} />
+                    <VolumeIcon volume={volume}/>
                     <input type="range" min="0" max="1" step="0.01" value={volume} onChange={handleVolumeChange}
-                           className="progress-bar-input"
-                           style={progressBarStyles(volume, 1)}
+                        className="progress-bar-input"
+                        style={progressBarStyles(volume, 1)}
                     />
-                    <button onClick={onClose} className="player-close-button">X</button>
+                    <button onClick={() => setIsPlayerVisible(true)} className="player-close-button">X</button>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default AudioPlayer;
