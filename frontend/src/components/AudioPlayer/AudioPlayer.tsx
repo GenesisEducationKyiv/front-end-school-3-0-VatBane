@@ -19,6 +19,7 @@ const AudioPlayer = () => {
     const audioRef = useRef<HTMLAudioElement>(null);
     const currentTrack = useAudioStore(state => state.currentTrack);
 
+    const { isPlayerVisible } = useAudioStore();
     const { setIsPlayerVisible } = useAudioStore();
 
     const togglePlayPause = () => {
@@ -132,7 +133,7 @@ const AudioPlayer = () => {
     }, [isPlaying, currentTrack]);
 
     return (
-        <div className={`audio-player-panel ${isVisible ? "open" : ""}`}>
+        <div className={`audio-player-panel ${isPlayerVisible ? "open" : ""}`}>
             <audio onTimeUpdate={handleTimeUpdate}
                 onLoadedMetadata={handleLoadedMetadata}
                 onCanPlayThrough={handleCanPlayThrough}

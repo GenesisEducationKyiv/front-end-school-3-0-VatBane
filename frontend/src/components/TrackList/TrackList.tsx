@@ -14,7 +14,6 @@ interface Props {
     handleBulkDelete: (tracks: string[]) => void;
     onEditApply: () => void;
     setCurrentTrack: (track: Track) => void;
-    onUpload: () => void;
 }
 
 const TrackList = (props: Props) => {
@@ -102,7 +101,6 @@ const TrackList = (props: Props) => {
                     onClick={handleClick}
                     onContextMenu={handleContextMenu}
                     isSelected={selectedTracks.includes(track.id)}
-                    onUpload={props.onUpload}
                     data-testid={`track-item-${track.id}`}
                 />
             ))}

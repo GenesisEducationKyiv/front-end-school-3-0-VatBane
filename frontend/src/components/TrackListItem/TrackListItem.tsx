@@ -17,7 +17,6 @@ interface Props {
     onContextMenu: (e: MouseEvent<HTMLDivElement>, track: Track) => void;
     onClick: (trackId: string) => void;
     isSelected: boolean;
-    onUpload: () => void;
 }
 
 const TrackListItem = (props: Props) => {
@@ -44,9 +43,7 @@ const TrackListItem = (props: Props) => {
         }
 
         const response = await FilesApiClient.uploadFile(props.track.id, file);
-        if (response.isOk()) {
-            props.onUpload();
-        } else {
+        if (response.isErr()) {
             alert(response.error);
         }
     };

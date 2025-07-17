@@ -1,6 +1,6 @@
 import { ApolloError, useSubscription } from "@apollo/client";
 import { getTracks } from "../graphql/queries";
-import { Track } from "../types/Track.ts";
+import { Track } from "../schemas/track.ts";
 import { Filters } from "../types/Filters.ts";
 import { ListMeta } from "../utils/commonTypes";
 
