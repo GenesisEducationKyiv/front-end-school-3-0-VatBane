@@ -1,31 +1,50 @@
-import {useEffect, useState} from "react";
+import { ApolloError, useSubscription } from "@apollo/client";
+import { getTracks } from "../graphql/queries";
 import { Track } from "../schemas/track.ts";
-import {Filters} from "../types/Filters.ts";
-import {TracksApiClient} from "../api/apiTracks.ts";
+import { Filters } from "../types/Filters.ts";
+import { ListMeta } from "../utils/commonTypes";
 
+interface UseTracksReturn {
+    tracks: Track[];
+    listMeta: ListMeta;
+    isLoading: boolean;
+    error: ApolloError | undefined;
+}
 
-const useTracks = (page: number, filters: Filters) => {
-    const [tracks, setTracks] = useState<Track[]>([]);
-    const [totalPages, setTotalPages] = useState<number>(1);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+interface UseTracksParams {
+    page: number;
+    filters: Filters;
+}
 
-    const fetchData = async () => {
-        setIsLoading(true);
-        const data = await TracksApiClient.fetchTracks(page, filters);
-        if (data.isOk()) {
-            setTracks(data.value.data.map((track: Track) => track));
-            setTotalPages(data.value.meta.totalPages);
-        } else {
-            alert(data.error);
-        }
-        setIsLoading(false);
+const useTracks = ({ page, filters }: UseTracksParams): UseTracksReturn => {
+    const { data, loading, error } = useSubscription(getTracks, {
+        variables: {
+            filter: {
+                page,
+                limit: filters.limit,
+                sort: filters.sortBy || 'title',
+                order: filters.sortOrder || 'asc',
+                search: filters.searchValue || undefined,
+                artist: filters.artist || undefined,
+                genre: filters.genre || undefined,
+            }
+        },
+        errorPolicy: 'all',
+        shouldResubscribe: true,
+        onData: (options) => {
+            console.log('New tracks data received:', options.data.data);
+        },
+        onComplete: () => {
+            console.log('Tracks subscription completed');
+        },
+    });
+
+    return {
+        tracks: data?.tracks?.data || [],
+        listMeta: data?.tracks?.meta || { page: 0, totalPages: 0, limit: filters.limit, total: 0},
+        isLoading: loading,
+        error,
     };
-
-    useEffect(() => {
-        fetchData();
-    }, [page, filters]);
-
-    return {tracks, totalPages, isLoading, refetch: fetchData};
 };
 
 export default useTracks;

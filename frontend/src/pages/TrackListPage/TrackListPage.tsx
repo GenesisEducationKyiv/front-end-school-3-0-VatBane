@@ -18,18 +18,27 @@ const TrackListPage = () => {
     const [page, setPage] = useState<number>(1);
     const [showModalCreate, setShowModalCreate] = useState<boolean>(false);
     const filters: Filters = useFilterStore(state => state.filters);
-    const { tracks, totalPages, isLoading, refetch } = useTracks(page, filters);
 
     const { setCurrentTrack } = useAudioStore();
     const { setIsPlayerVisible } = useAudioStore();
+    // Using the custom hook with GraphQL
+    const {
+        tracks,
+        listMeta,
+        isLoading,
+        error,
+    } = useTracks({
+        page,
+        filters
+    });
 
-    const updatePagination = (page: number) => {
-        if (page > totalPages)
-            page = totalPages;
-        if (page < 0)
-            page = 1;
+    const updatePagination = (newPage: number) => {
+        if (newPage > listMeta.totalPages)
+            newPage = listMeta.totalPages;
+        if (newPage < 1)
+            newPage = 1;
 
-        setPage(page);
+        setPage(newPage);
     };
 
     const handleClose = () => {
@@ -38,18 +47,26 @@ const TrackListPage = () => {
 
     const onTrackDelete = (deletedTrack: Track) => {
         console.log(deletedTrack);
-        refetch();
     };
 
     const handleBulkDelete = async (tracks: string[]) => {
         await TracksApiClient.bulkDeleteTracks(tracks);
-        await refetch();
     };
 
     const onTrackSave = (track: Track) => {
         console.log(track);
-        refetch();
     };
+
+    if (error && !tracks.length) {
+        return (
+            <div className="body-container">
+                <Header/>
+                <div className="error-container">
+                    <p>Error loading tracks: {error.message}</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="body-container">
@@ -57,7 +74,7 @@ const TrackListPage = () => {
             <FilterPanel handleAddClick={() => {
                 setShowModalCreate(true);
             }}/>
-            <PageScroll page={page} totalPages={totalPages} updatePagination={updatePagination}/>
+            <PageScroll page={page} totalPages={listMeta.totalPages} updatePagination={updatePagination}/>
 
 
             {isLoading ? (
@@ -67,11 +84,9 @@ const TrackListPage = () => {
             ) : (
                 <TrackList tracks={tracks}
                     onEditApply={() => {
-                        refetch();
                     }}
                     handleTrackDelete={onTrackDelete}
                     handleBulkDelete={handleBulkDelete}
-                    onUpload={refetch}
                     setCurrentTrack={(track: Track) => {
                         setCurrentTrack(track);
                         setIsPlayerVisible(true);
@@ -79,7 +94,7 @@ const TrackListPage = () => {
                 />
             )}
 
-            <PageScroll page={page} totalPages={totalPages} updatePagination={updatePagination}/>
+            <PageScroll page={page} totalPages={listMeta.totalPages} updatePagination={updatePagination}/>
             <AudioPlayer/>
             {showModalCreate && <TrackCreate handleClose={handleClose} onSave={onTrackSave}/>}
         </div>

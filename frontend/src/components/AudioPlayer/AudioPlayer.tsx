@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { TracksApiClient } from "../../api/apiTracks.ts";
 import './AudioPlayer.css';
 import emptyCover from "../../assets/emptyCover.png";
 import playIcon from "../../assets/playIcon.png";
@@ -18,6 +19,7 @@ const AudioPlayer = () => {
     const audioRef = useRef<HTMLAudioElement>(null);
     const currentTrack = useAudioStore(state => state.currentTrack);
 
+    const { isPlayerVisible } = useAudioStore();
     const { setIsPlayerVisible } = useAudioStore();
 
     const togglePlayPause = () => {
@@ -106,8 +108,32 @@ const AudioPlayer = () => {
         setIsPlaying(false);
     }, [currentTrack]);
 
+    useEffect(() => {
+        let shouldContinue = true;
+        
+        const runLoop = async () => {
+            while (shouldContinue && isPlaying) {
+                if (currentTrack) {
+                    console.log("isPlaying");
+                    const variants = ["NAME 1", "NAME 2", "NAME 3"];
+                    const newName = variants[Math.floor(Math.random() * 3)];
+                    const updatedTrack = { ...currentTrack, title: newName };
+                    TracksApiClient.updateTrack(currentTrack.id, updatedTrack);
+                    await new Promise(res => setTimeout(res, 500));
+                }
+            }
+        };
+
+        runLoop();
+
+        return () => {
+            shouldContinue = false;
+        };
+
+    }, [isPlaying, currentTrack]);
+
     return (
-        <div className={`audio-player-panel ${isVisible ? "open" : ""}`}>
+        <div className={`audio-player-panel ${isPlayerVisible ? "open" : ""}`}>
             <audio onTimeUpdate={handleTimeUpdate}
                 onLoadedMetadata={handleLoadedMetadata}
                 onCanPlayThrough={handleCanPlayThrough}
